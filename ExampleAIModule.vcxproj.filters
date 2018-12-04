@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Dll.cpp" />
+    <ClCompile Include="IASUModule.cpp" />
+    <ClCompile Include="experiments.cpp" />
+    <ClCompile Include="gene.cpp" />
+    <ClCompile Include="genome.cpp" />
+    <ClCompile Include="innovation.cpp" />
+    <ClCompile Include="link.cpp" />
+    <ClCompile Include="maze.cpp" />
+    <ClCompile Include="neat.cpp" />
+    <ClCompile Include="network.cpp" />
+    <ClCompile Include="nnode.cpp" />
+    <ClCompile Include="noveltyset.cpp" />
+    <ClCompile Include="organism.cpp" />
+    <ClCompile Include="population.cpp" />
+    <ClCompile Include="species.cpp" />
+    <ClCompile Include="trait.cpp" />
+    <ClCompile Include="noveltyexp.cpp">
+      <Filter>novelty search</Filter>
+    </ClCompile>
+    <ClCompile Include="neatmain.cpp">
+      <Filter>novelty search</Filter>
+    </ClCompile>
+    <ClCompile Include="IASUGameWrapper.cpp" />
+    <ClCompile Include="win32.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IASUModule.h" />
+    <ClInclude Include="datarec.h" />
+    <ClInclude Include="experiments.h" />
+    <ClInclude Include="gene.h" />
+    <ClInclude Include="genome.h" />
+    <ClInclude Include="histogram.h" />
+    <ClInclude Include="innovation.h" />
+    <ClInclude Include="link.h" />
+    <ClInclude Include="maze.h" />
+    <ClInclude Include="neat.h" />
+    <ClInclude Include="network.h" />
+    <ClInclude Include="nnode.h" />
+    <ClInclude Include="noveltyset.h" />
+    <ClInclude Include="organism.h" />
+    <ClInclude Include="population.h" />
+    <ClInclude Include="species.h" />
+    <ClInclude Include="trait.h" />
+    <ClInclude Include="neatmain.h">
+      <Filter>novelty search</Filter>
+    </ClInclude>
+    <ClInclude Include="HsMmap.h" />
+    <ClInclude Include="IASUGameWrapper.h" />
+    <ClInclude Include="sem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="novelty search">
+      <UniqueIdentifier>{9d6b5b2e-9e0a-499c-955c-60eb5387701e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
