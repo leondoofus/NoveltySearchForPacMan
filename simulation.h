@@ -14,10 +14,12 @@
 using namespace std;
 using namespace NEAT;
 
+void run_main_novelty(const char* output_dir = NULL);
+Population *init_novelty_realtime();
+void novelty_loop();
+
 float novelty_metric(noveltyitem* x, noveltyitem* y);
 noveltyitem* eval_novelty(Organism *org, data_record* record = NULL);
-
-Population *init_novelty_realtime(const char* output_dir = NULL);
 void eval_one();
 void network_step();
 
