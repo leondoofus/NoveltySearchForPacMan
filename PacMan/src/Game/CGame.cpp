@@ -1,5 +1,5 @@
 #include <Game/CGame.h>
-  
+#include <Engine/CStateManager.h>
 #include <Game/CGameLayout.h>
 #include <Engine/CInputManager.h>
 #include <Game/CBoardUtils.h>
@@ -29,7 +29,7 @@ CGame::CGame ():
 	bool_exit ( false ),
 	bool_menu ( false)
 	{
-		load_high_score ();
+		//load_high_score ();
 	}
 CGame::CGame ( std::string map, int difficulty ):
 	game_over ( true ),
@@ -48,7 +48,7 @@ CGame::CGame ( std::string map, int difficulty ):
 	high_score ( 0 ),
 	points ( 0 )
 	{
-		load_high_score ();
+		//load_high_score ();
 	}
 
 CGame::~CGame ()
@@ -69,8 +69,8 @@ void CGame::start (  )
 		safe_delete ( pause_menu );
 		
 
-		if ( high_score >= points)
-				save_high_score ();
+		//if ( high_score >= points)
+		//		save_high_score ();
 
 		if ( game_over )
 			{
@@ -79,7 +79,7 @@ void CGame::start (  )
 				//lives  = 3;
 				stage  = 1;
 			}
-		load_high_score ();
+		//load_high_score ();
 
 		game_over 			= false;
 		show_pause_menu  	= false;
@@ -109,7 +109,7 @@ void CGame::start (  )
 				bool_exit = true;
 			}
 
-		layout = new CGameLayout (this, cur_w, cur_h);
+		/*layout = new CGameLayout (this, cur_w, cur_h);
 
 		pause_menu = new CMenu ( 1, 1, layout -> pause_menu -> get_width () - 2,
 								 layout -> pause_menu -> get_height () - 2 );
@@ -128,7 +128,7 @@ void CGame::start (  )
 		pause_menu -> add ( item );
 
 		item = new CMenuItem ( "Exit Game", EXIT_GAME);
-		pause_menu -> add ( item );
+		pause_menu -> add ( item );*/
 
 		timer_player . start();
 		timer_ghost  . start();
@@ -295,8 +295,15 @@ void CGame::update ()
 								if ( high_score <= points )
 									v . push_back ( "NEW HIGHSCORE!!!");
 								CDialog::show ( v , "GAME OVER");*/
-								pause_menu -> RemoveByID ( RESUME );
-								exit(0);
+								//pause_menu -> RemoveByID ( RESUME );
+								
+								std::ofstream score;
+								score . open("./examples/scores/" + map + ".pacscore", std::ios::app);
+								score << points << std::endl;
+								score . close();
+								CStateManager::quit ();
+								//CNCurses::exit();
+								//exit(0);
 								/*paused = true;
 								pause_menu -> RemoveByID ( RESUME );*/
 							}
@@ -331,7 +338,7 @@ void CGame::update ()
 	}
 void CGame::draw ()
 	{
-		layout -> draw ( pause_menu );	
+		//layout -> draw ( pause_menu );	
 	}
 int  CGame::get_delay ( int speed ) const
 	{

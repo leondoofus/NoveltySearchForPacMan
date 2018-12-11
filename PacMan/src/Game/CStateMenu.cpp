@@ -50,7 +50,6 @@ void CStateMenu::unload ()
 void CStateMenu::update ()
 	{
 		// run game
-		CStateManager::change ( new CStateGame ( "default", difficulty ) );
 		/*if ( CInputManager::is_pressed ( 'q' )) // ESC KEY  - q
 			CStateManager::quit ();
 
