@@ -173,7 +173,7 @@ bool CGame::will_go_to_menu () const
 void CGame::handle_input ()
 	{
 
-		//TODO protentially readfile here
+		//TODO link to neat here
 		int r = rand() % 5;
 		if (r == 0) return;
 		else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
