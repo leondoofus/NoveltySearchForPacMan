@@ -173,10 +173,7 @@ int main(int argc, char **argv) {
 	std::tm* now = std::localtime(&t);
 	std::cout << endl << (now->tm_year + 1900) << (now->tm_mon + 1) << now->tm_mday << '_' << now->tm_hour << '_' << now->tm_min << '_' << now->tm_sec << endl;
 
-	//neat init
-	NEAT::load_neat_params("read/neatsettings.ne", false);
-
-	pop = init_novelty_realtime("write/");
+	run_main_novelty("write/");
 
 	//TODO MAIN LOOP
 

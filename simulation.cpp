@@ -15,6 +15,7 @@
 
 static char output_dir[100] = "write/";
 string genefile = "read/startgenes";
+string settingsfile = "read/neatsettings.ne";
 string current_genefile = "write/genefile";
 string current_popfile = "write/popfile";
 string indiv_file = "write/indiv";
@@ -42,6 +43,33 @@ static float archive_thresh = 6.0; //initial novelty threshold
 
 //archive of novel behaviors
 static noveltyarchive archive(archive_thresh, *novelty_metric, false);
+
+//main program
+void run_main_novelty(const char * outputdir)
+{
+	if (outputdir != NULL) strcpy(output_dir, outputdir);
+	//neat init
+	NEAT::load_neat_params(settingsfile.c_str(), false);
+
+	pop = init_novelty_realtime();
+
+	novelty_loop();
+
+}
+
+//main novelty training loop
+void novelty_loop()
+{
+	//TODO
+
+	//generate indiv
+
+	//run game
+
+
+	eval_one();
+
+}
 
 //novelty metric to evaluate individual
 float novelty_metric(noveltyitem* x, noveltyitem* y)
@@ -153,16 +181,12 @@ void read_indiv_number() {
 }
 
 //novelty initialization
-//call this when AI starts
-Population *init_novelty_realtime(const char* outputdir) {
+//call this when program starts
+Population *init_novelty_realtime() {
 	Genome *start_genome;
 	//genome
 	char curword[20];
 	int id;
-
-	//param = par;
-	if (outputdir != NULL) strcpy(output_dir, outputdir);
-
 
 #ifdef BEST_MODE
 	std::srand((unsigned)time(NULL));
