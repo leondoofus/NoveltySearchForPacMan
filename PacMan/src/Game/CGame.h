@@ -9,6 +9,9 @@
 #include <Engine/CTimer.h>
 #include <Engine/CMenu.h>
 
+#include <vector>
+using namespace std;
+
 class CGameLayout;
 
 class CGame
@@ -18,6 +21,7 @@ class CGame
 	public:
 		CGame ();
 		CGame ( std::string map, int difficulty );
+		CGame ( std::string map, int difficulty , vector<int> params);
 		virtual ~CGame();
 
 		/// Starts a game, loading `map` from parameter.
@@ -80,6 +84,8 @@ class CGame
 		int points;
 		int lives;
 
+		vector<int> params;
+
 	protected:
 		/// Timer that tells when to move player.
 		CTimer timer_player;
@@ -106,7 +112,7 @@ class CGame
 		/// Tells what stage player is in.
 		int stage;
 
-
+		unsigned int cursor;
 	};
 
 

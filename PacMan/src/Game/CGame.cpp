@@ -46,7 +46,29 @@ CGame::CGame ( std::string map, int difficulty ):
 	difficulty ( difficulty ),
 	stage ( 1 ),
 	high_score ( 0 ),
-	points ( 0 )
+	points ( 0 ),
+	cursor (0)
+	{
+		//load_high_score ();
+	}
+CGame::CGame ( std::string map, int difficulty, vector<int> params ):
+	game_over ( true ),
+	paused (false),
+	show_pause_menu (false),
+	player (NULL),
+	board (NULL),
+	layout (NULL), 
+	ghost ( NULL ),
+	pause_menu ( NULL ),
+	bool_exit ( false ),
+	bool_menu ( false),
+	map ( map),
+	difficulty ( difficulty ),
+	stage ( 1 ),
+	high_score ( 0 ),
+	points ( 0 ),
+	params (params),
+	cursor (0)
 	{
 		//load_high_score ();
 	}
@@ -109,7 +131,7 @@ void CGame::start (  )
 				bool_exit = true;
 			}
 
-		/*layout = new CGameLayout (this, cur_w, cur_h);
+		layout = new CGameLayout (this, cur_w, cur_h);
 
 		pause_menu = new CMenu ( 1, 1, layout -> pause_menu -> get_width () - 2,
 								 layout -> pause_menu -> get_height () - 2 );
@@ -128,7 +150,7 @@ void CGame::start (  )
 		pause_menu -> add ( item );
 
 		item = new CMenuItem ( "Exit Game", EXIT_GAME);
-		pause_menu -> add ( item );*/
+		pause_menu -> add ( item );
 
 		timer_player . start();
 		timer_ghost  . start();
@@ -174,12 +196,30 @@ void CGame::handle_input ()
 	{
 
 		//TODO protentially readfile here
-		int r = rand() % 5;
-		if (r == 0) return;
-		else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
-		else if (r == 2) this -> player -> move ( CPlayer::LEFT );
-		else if (r == 3) this -> player -> move ( CPlayer::UP );
-		else this -> player -> move ( CPlayer::DOWN );
+		if (cursor == 0 && params.size() == 0)
+		{
+			int r = rand() % 5;
+			if (r == 0) return;
+			else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
+			else if (r == 2) this -> player -> move ( CPlayer::LEFT );
+			else if (r == 3) this -> player -> move ( CPlayer::UP );
+			else this -> player -> move ( CPlayer::DOWN );
+		} else
+		{
+			if (cursor > params.size()){
+				return;
+			}
+			else
+			{
+				if (params[cursor] == 1) this -> player -> move ( CPlayer::RIGHT );
+				else if (params[cursor] == 2) this -> player -> move ( CPlayer::LEFT );
+				else if (params[cursor] == 3) this -> player -> move ( CPlayer::UP );
+				else if (params[cursor] == 4 )this -> player -> move ( CPlayer::DOWN );
+				++cursor;
+				return;
+			}	
+		}
+		
 		/*if ( ! CInputManager::any_key_pressed () )
 			return;
 
@@ -338,7 +378,7 @@ void CGame::update ()
 	}
 void CGame::draw ()
 	{
-		//layout -> draw ( pause_menu );	
+		layout -> draw ( pause_menu );	
 	}
 int  CGame::get_delay ( int speed ) const
 	{
