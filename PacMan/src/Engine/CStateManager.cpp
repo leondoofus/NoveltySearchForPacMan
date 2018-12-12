@@ -27,6 +27,10 @@ void CStateManager::quit ()
 	{
 		throw CStateManagerQuitExeption();
 	}
+int CStateManager::quitScore (int _score)
+	{
+		throw CStateManagerQuitExeptionReturnScore(_score);
+	}
 void CStateManager::run ( CState * init_state )
 	{
 		if ( ! init_state)
@@ -38,12 +42,12 @@ void CStateManager::run ( CState * init_state )
 			{
 				try 
 					{
-						CInputManager::update ();
+						//CInputManager::update ();
 						current_state -> update ();
 
-						if ( current_state) current_state -> draw ();
+						//if ( current_state) current_state -> draw ();
 
-						CTime::delay_ms (100);
+						CTime::delay_ms (0);
 					}
 				catch ( CStateManagerChangeExeption & e )
 					{

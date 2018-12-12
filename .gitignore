@@ -1,5 +1,5 @@
 	
-	
+	PacMan/npac
 	
 	.idea/
 	PacMan/doc/
@@ -10,3 +10,10 @@
 	build/bin/write/
 	build/cmake_install.cmake
 	cmake-build-debug/
+
+	*.o
+	PacMan/src/*.o
+	PacMan/src/Engine/*.o
+	PacMan/src/Game/*.o
+
+	Makefile

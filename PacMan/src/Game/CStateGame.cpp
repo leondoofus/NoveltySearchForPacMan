@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+
 template<typename T> void safe_delete(T*& a) 
 	{
 	  delete a;
@@ -29,7 +30,16 @@ CStateGame::CStateGame( std::string map, int difficulty ):
 	{
 
 	}
+CStateGame::CStateGame( std::string map, int difficulty, vector<int> params ):
+	game ( NULL ),
+	will_exit ( false),
+	will_go_to_menu ( false ),
+	map ( map ),
+	difficulty ( difficulty ),
+	params(params)
+	{
 
+	}
 CStateGame::~CStateGame()
 	{
 
@@ -38,8 +48,16 @@ void CStateGame::load ()
 	{
 		try 
 			{
-				game = new CGame ( map, difficulty );
-				game -> start (); // level to chose
+				if (params.size() == 0)
+				{
+					game = new CGame ( map, difficulty );
+					game -> start (); // level to chose
+				} else
+				{
+					game = new CGame ( map, difficulty, params );
+					game -> start (); // level to chose
+				}
+				
 				// load scores
 			}
 		catch ( BadFileExeption & e )

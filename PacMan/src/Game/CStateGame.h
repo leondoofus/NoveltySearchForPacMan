@@ -4,11 +4,15 @@
 #include <CState.h>
 #include <CGame.h>
 
+#include <vector>
+using namespace std;
+
 class CStateGame : public CState
 	{
 	public:
 		CStateGame();
 		CStateGame( std::string map, int difficulty );
+		CStateGame( std::string map, int difficulty, vector<int> params );
 		virtual ~CStateGame();
 		virtual void load ();
 		void unload ();
@@ -22,6 +26,7 @@ class CStateGame : public CState
 		bool will_go_to_menu;
 		std::string map;
 		unsigned int difficulty;
+		vector<int> params;
 		
 	};
 

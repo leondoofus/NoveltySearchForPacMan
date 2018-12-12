@@ -1,5 +1,5 @@
 #include <CGame.h>
-  
+#include <CStateManager.h>
 #include <CGameLayout.h>
 #include <CInputManager.h>
 #include <CBoardUtils.h>
@@ -29,7 +29,7 @@ CGame::CGame ():
 	bool_exit ( false ),
 	bool_menu ( false)
 	{
-		load_high_score ();
+		//load_high_score ();
 	}
 CGame::CGame ( std::string map, int difficulty ):
 	game_over ( true ),
@@ -46,9 +46,31 @@ CGame::CGame ( std::string map, int difficulty ):
 	difficulty ( difficulty ),
 	stage ( 1 ),
 	high_score ( 0 ),
-	points ( 0 )
+	points ( 0 ),
+	cursor (0)
 	{
-		load_high_score ();
+		//load_high_score ();
+	}
+CGame::CGame ( std::string map, int difficulty, vector<int> params ):
+	game_over ( true ),
+	paused (false),
+	show_pause_menu (false),
+	player (NULL),
+	board (NULL),
+	layout (NULL), 
+	ghost ( NULL ),
+	pause_menu ( NULL ),
+	bool_exit ( false ),
+	bool_menu ( false),
+	map ( map),
+	difficulty ( difficulty ),
+	stage ( 1 ),
+	high_score ( 0 ),
+	points ( 0 ),
+	params (params),
+	cursor (0)
+	{
+		//load_high_score ();
 	}
 
 CGame::~CGame ()
@@ -69,8 +91,8 @@ void CGame::start (  )
 		safe_delete ( pause_menu );
 		
 
-		if ( high_score >= points)
-				save_high_score ();
+		//if ( high_score >= points)
+		//		save_high_score ();
 
 		if ( game_over )
 			{
@@ -79,7 +101,7 @@ void CGame::start (  )
 				//lives  = 3;
 				stage  = 1;
 			}
-		load_high_score ();
+		//load_high_score ();
 
 		game_over 			= false;
 		show_pause_menu  	= false;
@@ -174,12 +196,31 @@ void CGame::handle_input ()
 	{
 
 		//TODO link to neat here
-		int r = rand() % 5;
-		if (r == 0) return;
-		else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
-		else if (r == 2) this -> player -> move ( CPlayer::LEFT );
-		else if (r == 3) this -> player -> move ( CPlayer::UP );
-		else this -> player -> move ( CPlayer::DOWN );
+
+		if (cursor == 0 && params.size() == 0)
+		{
+			int r = rand() % 5;
+			if (r == 0) return;
+			else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
+			else if (r == 2) this -> player -> move ( CPlayer::LEFT );
+			else if (r == 3) this -> player -> move ( CPlayer::UP );
+			else this -> player -> move ( CPlayer::DOWN );
+		} else
+		{
+			if (cursor > params.size()){
+				return;
+			}
+			else
+			{
+				if (params[cursor] == 1) this -> player -> move ( CPlayer::RIGHT );
+				else if (params[cursor] == 2) this -> player -> move ( CPlayer::LEFT );
+				else if (params[cursor] == 3) this -> player -> move ( CPlayer::UP );
+				else if (params[cursor] == 4 )this -> player -> move ( CPlayer::DOWN );
+				++cursor;
+				return;
+			}	
+		}
+
 		/*if ( ! CInputManager::any_key_pressed () )
 			return;
 
@@ -295,8 +336,15 @@ void CGame::update ()
 								if ( high_score <= points )
 									v . push_back ( "NEW HIGHSCORE!!!");
 								CDialog::show ( v , "GAME OVER");*/
-								pause_menu -> RemoveByID ( RESUME );
-								exit(0);
+								//pause_menu -> RemoveByID ( RESUME );
+								
+								/*std::ofstream score;
+								score . open("./examples/scores/" + map + ".pacscore", std::ios::app);
+								score << points << std::endl;
+								score . close();*/
+								CStateManager::quitScore (points);
+								//CNCurses::exit();
+								//exit(0);
 								/*paused = true;
 								pause_menu -> RemoveByID ( RESUME );*/
 							}

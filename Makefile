@@ -1,5 +1,5 @@
 
-CC = g++ 
+CC = g++
 
 
 LIBS = -lm
@@ -9,11 +9,14 @@ LIBS = -lm
 
 #CFLAGS = -g -Wall -Wno-return-type $(INCLUDES) -DSWIG_GLOBAL
 #CFLAGS = -g -Wall -Werror
-CFLAGS = -g -Wall -O3 
+CFLAGS = -std=c++11 -g -Wall -O3 -w
 
-rtneat: maze.h neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o noveltyexp.o neatmain.o noveltyset.o  #neatswig_wrap.o visual.o
-	$(CC) $(CFLAGS) neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatmain.o noveltyexp.o noveltyset.o  -o rtneat $(LIBS)
+#rtneat: maze.h neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o noveltyexp.o neatmain.o noveltyset.o  #neatswig_wrap.o visual.o
+#	$(CC) $(CFLAGS) neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatmain.o noveltyexp.o noveltyset.o  -o rtneat $(LIBS)
 #	$(CC) $(CFLAGS) $(LIBS) networks.o genetics.o visual.o experiments.o neatswig_wrap.o neatmain.o -o neat `gtkmm-config --cflags --libs`
+rtneat: maze.h neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o noveltyexp.o noveltyset.o main.o  #neatswig_wrap.o visual.o
+	$(CC) $(CFLAGS) neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o main.o noveltyexp.o noveltyset.o  -o Test $(LIBS)
+
 
 ########################
 neat.o: neat.cpp neat.h
@@ -52,8 +55,11 @@ population.o: population.cpp population.h organism.h
 experiments.o: experiments.cpp experiments.h network.h species.h
 	$(CC) $(CFLAGS) -c experiments.cpp -o experiments.o
 
-neatmain.o: neatmain.cpp neatmain.h neat.h population.h
-	$(CC) $(CFLAGS) -c neatmain.cpp -o neatmain.o
+#neatmain.o: neatmain.cpp neatmain.h neat.h population.h
+#	$(CC) $(CFLAGS) -c neatmain.cpp -o neatmain.o
+
+main.o: main.cpp simulation.h neat.h noveltyset.h histogram.h datarec.h
+	$(CC) $(CFLAGS) -c main.cpp -o main.o
 
 noveltyexp.o: noveltyexp.cpp noveltyset.h experiments.h 
 	$(CC) $(CFLAGS) -c noveltyexp.cpp -o noveltyexp.o
@@ -66,4 +72,4 @@ noveltyset.o: noveltyset.cpp noveltyset.h
 ########################
 
 clean:
-	rm -f noveltyexp.o neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatmain.o rtneat
+	rm -f Test man.o noveltyexp.o neat.o network.o nnode.o link.o trait.o gene.o genome.o innovation.o organism.o species.o population.o experiments.o neatmain.o rtneat
