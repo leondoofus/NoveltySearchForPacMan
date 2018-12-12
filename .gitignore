@@ -1,0 +1,12 @@
+	
+	
+	
+	.idea/
+	PacMan/doc/
+	build/CMakeCache.txt
+	build/CMakeFiles/
+	build/Makefile
+	build/bin/pacmanNovelty
+	build/bin/write/
+	build/cmake_install.cmake
+	cmake-build-debug/
