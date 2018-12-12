@@ -297,11 +297,11 @@ void CGame::update ()
 								CDialog::show ( v , "GAME OVER");*/
 								//pause_menu -> RemoveByID ( RESUME );
 								
-								std::ofstream score;
+								/*std::ofstream score;
 								score . open("./examples/scores/" + map + ".pacscore", std::ios::app);
 								score << points << std::endl;
-								score . close();
-								CStateManager::quit ();
+								score . close();*/
+								CStateManager::quitScore (points);
 								//CNCurses::exit();
 								//exit(0);
 								/*paused = true;

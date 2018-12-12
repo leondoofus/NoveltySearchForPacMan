@@ -88,6 +88,6 @@ void CStateGame::update ()
 	}
 void CStateGame::draw ()
 	{
-		if ( ! will_exit )
-			game -> draw ();
+		/*if ( ! will_exit )
+			game -> draw ();*/
 	}

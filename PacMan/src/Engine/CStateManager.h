@@ -23,6 +23,8 @@ class CStateManager
 		/// the old state.
 		static void quit ();
 
+		static int quitScore(int _score);
+
 		/// Initializes basically everything. Place
 		/// where all magic happens. Game never leaves
 		/// this method.
@@ -56,6 +58,23 @@ class CStateManagerQuitExeption
 	public:
 		CStateManagerQuitExeption( )
 		{}
+		
+	};
+
+/// Exeption that's used in case of quitting the game and returning score
+///	
+class CStateManagerQuitExeptionReturnScore 
+	{
+	public:
+		int score;
+		CStateManagerQuitExeptionReturnScore(int _score )
+		{
+			score = _score;
+		}
+		int getScore()
+		{
+			return score;
+		}
 		
 	};
 
