@@ -1,5 +1,5 @@
 
-#include <Engine/CWindow.h>
+#include <CWindow.h>
 
 #include <sstream>				// stringstream
 #include <iostream>

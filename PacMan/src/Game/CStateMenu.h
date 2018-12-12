@@ -1,9 +1,9 @@
 #ifndef CSTATEMENU_H_DEFINED
 #define CSTATEMENU_H_DEFINED
 
-#include <Engine/CState.h>
-#include <Engine/CMenu.h>
-#include <Game/CMenuLayout.h>
+#include <CState.h>
+#include <CMenu.h>
+#include <CMenuLayout.h>
 
 
 class CStateMenu : public CState

@@ -1,13 +1,13 @@
-#include <Game/CStateMenu.h>
-#include <Game/CGhostManager.h>
-#include <Engine/CStateManager.h>
-#include <Game/CBoardUtils.h>
-#include <Game/CStateGame.h>
+#include <CStateMenu.h>
+#include <CGhostManager.h>
+#include <CStateManager.h>
+#include <CBoardUtils.h>
+#include <CStateGame.h>
   
-#include <Engine/CInputManager.h>
-#include <Engine/CDialog.h>
-#include <Engine/CMenuItem.h>
-#include <Engine/CMenuItemOption.h>
+#include <CInputManager.h>
+#include <CDialog.h>
+#include <CMenuItem.h>
+#include <CMenuItemOption.h>
 #include <cstdlib>
 
 

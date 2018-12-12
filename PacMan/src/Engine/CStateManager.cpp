@@ -1,6 +1,6 @@
-#include <Engine/CStateManager.h>
-#include <Engine/CTime.h>
-#include <Engine/CInputManager.h>
+#include <CStateManager.h>
+#include <CTime.h>
+#include <CInputManager.h>
 #include <stdlib.h>
 
 template<typename T> void safe_delete(T*& a) 

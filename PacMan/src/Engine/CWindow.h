@@ -1,7 +1,7 @@
 #ifndef CWINDOW_H_DEFINED
 #define CWINDOW_H_DEFINED
 
-#include <Engine/CNCurses.h>
+#include <CNCurses.h>
 
 #include <string>
 #include <vector>

@@ -1,8 +1,8 @@
-#include <Game/CStateGame.h>
-#include <Game/CStateMenu.h>
-#include <Engine/CStateManager.h>
-#include <Engine/CDialog.h>
-#include <Game/CBoardUtils.h>
+#include <CStateGame.h>
+#include <CStateMenu.h>
+#include <CStateManager.h>
+#include <CDialog.h>
+#include <CBoardUtils.h>
   
 
 #include <vector>

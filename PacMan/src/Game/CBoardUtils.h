@@ -1,7 +1,7 @@
 #ifndef CBOARDUTILS_H_DEFINED
 #define CBOARDUTILS_H_DEFINED
 
-#include <Game/CBoard.h>
+#include <CBoard.h>
 
 #include <string>
 #include <vector>

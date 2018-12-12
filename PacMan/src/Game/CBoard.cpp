@@ -1,5 +1,5 @@
-#include <Game/CBoard.h>
-#include <Game/CPlayer.h>
+#include <CBoard.h>
+#include <CPlayer.h>
 
 #include <ostream>
 #include <iostream>

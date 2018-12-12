@@ -2,8 +2,8 @@
 #define CPLAYER_H_DEFINED
 
 #include <utility>
-#include <Engine/CWindow.h>
-#include <Game/CBoard.h>
+#include <CWindow.h>
+#include <CBoard.h>
 
 ///
 class CPlayer

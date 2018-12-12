@@ -1,7 +1,7 @@
-#include <Game/CGhostManager.h>
+#include <CGhostManager.h>
   
-#include <Game/CGhostMedium.h>
-#include <Game/CGhostHard.h>
+#include <CGhostMedium.h>
+#include <CGhostHard.h>
 #include <stdlib.h>
 
 

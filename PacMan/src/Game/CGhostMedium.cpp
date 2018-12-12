@@ -1,4 +1,4 @@
-#include <Game/CGhostMedium.h>
+#include <CGhostMedium.h>
 
 #include <stdlib.h>
 #include <set>

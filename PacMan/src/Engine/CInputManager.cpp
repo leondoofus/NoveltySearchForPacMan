@@ -1,5 +1,5 @@
-#include <Engine/CInputManager.h>
-#include <Engine/CNCurses.h>
+#include <CInputManager.h>
+#include <CNCurses.h>
 
 #include <ncurses.h>
 

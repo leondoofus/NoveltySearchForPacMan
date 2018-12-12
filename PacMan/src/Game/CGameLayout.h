@@ -1,10 +1,10 @@
 #ifndef CGAMELAYOUT_H_DEFINED
 #define CGAMELAYOUT_H_DEFINED
 
-#include <Game/CGame.h>
-#include <Engine/CLayout.h>
-#include <Engine/CMenu.h>
-#include <Engine/CWindow.h>
+#include <CGame.h>
+#include <CLayout.h>
+#include <CMenu.h>
+#include <CWindow.h>
 
 class CGame;
 

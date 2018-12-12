@@ -1,13 +1,13 @@
 #ifndef CGAME_H_DEFINED
 #define CGAME_H_DEFINED
 
-#include <Game/CGhostManager.h>
-#include <Game/CGameLayout.h>
-#include <Game/CBoard.h>
-#include <Game/CPlayer.h>
-#include <Engine/CWindow.h>
-#include <Engine/CTimer.h>
-#include <Engine/CMenu.h>
+#include <CGhostManager.h>
+#include <CGameLayout.h>
+#include <CBoard.h>
+#include <CPlayer.h>
+#include <CWindow.h>
+#include <CTimer.h>
+#include <CMenu.h>
 
 class CGameLayout;
 

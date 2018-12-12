@@ -1,6 +1,6 @@
-#include <Game/CGhost.h>
+#include <CGhost.h>
 
-#include <Engine/CNCurses.h>
+#include <CNCurses.h>
 
 CGhost::CGhost  (int x, int y):
 	cur_dir ( CGhost::UP ),

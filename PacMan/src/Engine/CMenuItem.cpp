@@ -1,5 +1,5 @@
-#include <Engine/CMenuItem.h>
-#include <Engine/CInputManager.h>
+#include <CMenuItem.h>
+#include <CInputManager.h>
 
 CMenuItem::CMenuItem ( std::string label, int id ):
 	type ( CMenuItem::ITEM ),

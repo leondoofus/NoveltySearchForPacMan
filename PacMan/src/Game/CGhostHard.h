@@ -1,10 +1,10 @@
 #ifndef CGHOSTHARD_H_DEFINED
 #define CGHOSTHARD_H_DEFINED
 
-#include <Game/CPlayer.h>
-#include <Game/CGhost.h>
-#include <Game/CBoard.h>
-#include <Engine/CWindow.h>
+#include <CPlayer.h>
+#include <CGhost.h>
+#include <CBoard.h>
+#include <CWindow.h>
 
 /// Smartest type of ghost, on every crossroad checks where 
 /// ghost is and goes that way.

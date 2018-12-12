@@ -1,9 +1,9 @@
 #ifndef CGHOST_H_DEFINED
 #define CGHOST_H_DEFINED
 
-#include <Game/CBoard.h>
-#include <Game/CPlayer.h>
-#include <Engine/CWindow.h>
+#include <CBoard.h>
+#include <CPlayer.h>
+#include <CWindow.h>
 
 #include <stdlib.h>
 #include <set>

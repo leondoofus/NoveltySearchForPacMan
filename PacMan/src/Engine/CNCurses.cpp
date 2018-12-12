@@ -1,4 +1,4 @@
-#include <Engine/CNCurses.h>
+#include <CNCurses.h>
 
 #include <sys/select.h>			// select()
 #include <unistd.h>				// STDIN_FILENO

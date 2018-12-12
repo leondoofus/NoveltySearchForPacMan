@@ -1,8 +1,8 @@
 #ifndef CBOARD_H_DEFINED
 #define CBOARD_H_DEFINED
 
-#include <Engine/C2DArray.h>
-#include <Engine/CWindow.h>
+#include <C2DArray.h>
+#include <CWindow.h>
 
 #include <map>
 #include <vector>

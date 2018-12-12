@@ -1,6 +1,6 @@
-#include <Game/CMenuLayout.h>
-#include <Engine/CNCurses.h>
-#include <Engine/CWindow.h>
+#include <CMenuLayout.h>
+#include <CNCurses.h>
+#include <CWindow.h>
 
 #include <vector>
 #include <string>

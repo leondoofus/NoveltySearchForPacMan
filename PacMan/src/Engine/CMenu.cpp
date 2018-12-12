@@ -1,5 +1,5 @@
-#include <Engine/CMenu.h>
-#include <Engine/CInputManager.h>
+#include <CMenu.h>
+#include <CInputManager.h>
 #include <cstdlib>
 
 template<typename T> void safe_delete(T*& a) 

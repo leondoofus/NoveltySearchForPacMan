@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.3)
 project(IAR)
 
+set(CMAKE_VERBOSE_MAKEFILE 0)
+
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
@@ -36,7 +38,8 @@ include_directories(
 
 #set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread ")
+#set(CMAKE_LINK_LIBRARY_FLAG "${CMAKE_LINK_LIBRARY_FLAG} -lmenu -lncurses -ltinfo ")
 
 add_executable(pacmanNovelty
 
@@ -45,7 +48,22 @@ add_executable(pacmanNovelty
 	gene.cpp             link.cpp        nnode.cpp       	species.cpp
 	genome.cpp           maze.cpp        trait.cpp
 	simulation.cpp		 neat.cpp        noveltyset.cpp 	posix.cpp
-	PacMan/src/		 PacMan/src/Engine/
+	PacMan/src/Engine/CDialog.cpp          PacMan/src/Game/CBoardUtils.cpp
+	
+	PacMan/src/Engine/CInputManager.cpp    PacMan/src/Game/CGame.cpp
+	PacMan/src/Engine/CLayout.cpp          PacMan/src/Game/CGameLayout.cpp
+	PacMan/src/Engine/CMenu.cpp            PacMan/src/Game/CGhost.cpp
+	PacMan/src/Engine/CMenuItem.cpp        PacMan/src/Game/CGhostHard.cpp
+	PacMan/src/Engine/CMenuItemOption.cpp  PacMan/src/Game/CGhostManager.cpp
+	PacMan/src/Engine/CNCurses.cpp         PacMan/src/Game/CGhostMedium.cpp
+	PacMan/src/Engine/CStateManager.cpp    PacMan/src/Game/CMenuLayout.cpp
+	PacMan/src/Engine/CTime.cpp            PacMan/src/Game/CPlayer.cpp
+	PacMan/src/Engine/CTimer.cpp           PacMan/src/Game/CStateGame.cpp
+	PacMan/src/Engine/CWindow.cpp          PacMan/src/Game/CStateMenu.cpp
+	PacMan/src/Game/CBoard.cpp
+
     )
 
-#target_link_libraries(IASUModule BWAPILIB)
+find_library(nclib ncurses libncurses lncurses)
+
+target_link_libraries(pacmanNovelty ${nclib})

@@ -1,9 +1,9 @@
 #ifndef CMENU_H_DEFINED
 #define CMENU_H_DEFINED
 
-#include <Engine/CWindow.h>
-#include <Engine/CMenuItem.h>
-#include <Engine/CMenuItemOption.h>
+#include <CWindow.h>
+#include <CMenuItem.h>
+#include <CMenuItemOption.h>
 
 #include <vector>
 #include <string>

@@ -2,10 +2,10 @@
 #define CGHOSTMANAGER_H_DEFINED
 
 #include <vector>
-#include <Game/CGhost.h>
-#include <Game/CBoard.h>
-#include <Game/CPlayer.h>
-#include <Engine/CWindow.h>
+#include <CGhost.h>
+#include <CBoard.h>
+#include <CPlayer.h>
+#include <CWindow.h>
 
 
 /// Enumeriation of game difficulties.

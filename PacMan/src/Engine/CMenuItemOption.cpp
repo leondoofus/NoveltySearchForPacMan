@@ -1,6 +1,6 @@
-#include <Engine/CMenuItem.h>
-#include <Engine/CMenuItemOption.h>
-#include <Engine/CInputManager.h>
+#include <CMenuItem.h>
+#include <CMenuItemOption.h>
+#include <CInputManager.h>
 
 CMenuItemOption::CMenuItemOption( std::string label, int id , unsigned int & asigned_value ):
 	CMenuItem (label, id ),

@@ -1,9 +1,9 @@
-#include <Game/CGame.h>
+#include <CGame.h>
   
-#include <Game/CGameLayout.h>
-#include <Engine/CInputManager.h>
-#include <Game/CBoardUtils.h>
-#include <Engine/CDialog.h>
+#include <CGameLayout.h>
+#include <CInputManager.h>
+#include <CBoardUtils.h>
+#include <CDialog.h>
 
 #include <stdlib.h>
 #include <sstream>

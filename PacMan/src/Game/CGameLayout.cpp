@@ -1,4 +1,4 @@
-#include <Game/CGameLayout.h>
+#include <CGameLayout.h>
   
 
 #include <string>

@@ -1,4 +1,4 @@
-#include <Game/CGhostHard.h>
+#include <CGhostHard.h>
 
 #include <stdlib.h>
 #include <set>

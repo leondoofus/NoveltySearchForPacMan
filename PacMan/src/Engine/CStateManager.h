@@ -1,7 +1,7 @@
 #ifndef CSTATEMANAGER_H_DEFINED
 #define CSTATEMANAGER_H_DEFINED
 
-#include <Engine/CState.h>
+#include <CState.h>
 
 /// Controls states all over the game.
 ///

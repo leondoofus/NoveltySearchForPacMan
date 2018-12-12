@@ -4,6 +4,11 @@
 #include <cstring>
 #include <cstdio>
 
+
+#include <CNCurses.h>
+#include <CStateManager.h>
+#include <CStateMenu.h>
+
 // uncomment this to prevent learning and only play with one of the best versions so far
 //#define BEST_MODE
 
@@ -66,6 +71,14 @@ void novelty_loop()
 
 	//run game
 
+	CNCurses::init();
+	CStateManager states;
+	states.run ( new CStateMenu );
+
+    getch();
+
+	CNCurses::exit();
+	
 
 	eval_one();
 

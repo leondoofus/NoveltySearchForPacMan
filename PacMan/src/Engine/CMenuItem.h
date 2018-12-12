@@ -1,7 +1,7 @@
 #ifndef CMENUITEM_H_DEFINED
 #define CMENUITEM_H_DEFINED
 
-#include <Engine/CWindow.h>
+#include <CWindow.h>
 
 #include <string>
 

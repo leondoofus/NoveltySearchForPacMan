@@ -1,10 +1,10 @@
 #ifndef CGHOSTMEDIUM_H_DEFINED
 #define CGHOSTMEDIUM_H_DEFINED
 
-#include <Game/CPlayer.h>
-#include <Game/CGhost.h>
-#include <Game/CBoard.h>
-#include <Engine/CWindow.h>
+#include <CPlayer.h>
+#include <CGhost.h>
+#include <CBoard.h>
+#include <CWindow.h>
 
 /// Ghost that checks if there is player on sight,
 /// if so, tries to follow him.

@@ -1,8 +1,8 @@
 #ifndef CMENUITEMOPTION_H_DEFINED
 #define CMENUITEMOPTION_H_DEFINED
 
-#include <Engine/CMenuItem.h>
-#include <Engine/CWindow.h>
+#include <CMenuItem.h>
+#include <CWindow.h>
 
 #include <string>
 

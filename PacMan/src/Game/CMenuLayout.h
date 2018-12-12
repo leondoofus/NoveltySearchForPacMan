@@ -1,10 +1,10 @@
 #ifndef CMENULAYOUT_H_DEFINED
 #define CMENULAYOUT_H_DEFINED
 
-//#include <Game/CStateMenu.h>
-#include <Engine/CWindow.h>
-#include <Engine/CLayout.h>
-#include <Engine/CMenu.h>
+//#include <CStateMenu.h>
+#include <CWindow.h>
+#include <CLayout.h>
+#include <CMenu.h>
 
 class CStateMenu;
 

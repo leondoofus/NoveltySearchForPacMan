@@ -1,8 +1,8 @@
 #ifndef CSTATEGAME_H_DEFINED
 #define CSTATEGAME_H_DEFINED
 
-#include <Engine/CState.h>
-#include <Game/CGame.h>
+#include <CState.h>
+#include <CGame.h>
 
 class CStateGame : public CState
 	{

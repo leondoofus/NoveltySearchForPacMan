@@ -1,7 +1,7 @@
 #ifndef CLAYOUT_H_DEFINED
 #define CLAYOUT_H_DEFINED
 
-#include <Engine/CWindow.h>
+#include <CWindow.h>
 
 
 /// Main Layout for things how are shown on screen.

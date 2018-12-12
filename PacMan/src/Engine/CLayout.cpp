@@ -1,5 +1,5 @@
-#include <Engine/CLayout.h>
-#include <Engine/CNCurses.h>
+#include <CLayout.h>
+#include <CNCurses.h>
 
 #include <iostream>
 #include <cstdlib>

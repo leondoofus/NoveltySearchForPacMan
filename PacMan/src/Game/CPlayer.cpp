@@ -1,4 +1,4 @@
-#include <Game/CPlayer.h>
+#include <CPlayer.h>
 
 CPlayer::CPlayer ( int x, int y ):
 	alive ( true ),

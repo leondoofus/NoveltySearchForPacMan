@@ -1,4 +1,4 @@
-#include <Game/CBoardUtils.h>
+#include <CBoardUtils.h>
 
 #include <dirent.h>
 #include <algorithm>
