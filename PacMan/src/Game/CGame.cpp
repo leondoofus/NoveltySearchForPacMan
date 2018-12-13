@@ -313,9 +313,11 @@ void CGame::update ()
 
 				return;
 			}
-
-		if ( timer_player . d_ms () >= delta )
-			{
+#ifdef USE_NCURSES
+		if ( timer_player . d_ms () >= delta ){
+#else
+    if (true){
+#endif
 				if ( ! player -> is_alive ())
 					{
 						if ( lives > 0 )
