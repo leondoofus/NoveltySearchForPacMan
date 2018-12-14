@@ -26,7 +26,8 @@ CStateGame::CStateGame( std::string map, int difficulty ):
 	will_exit ( false),
 	will_go_to_menu ( false ),
 	map ( map ),
-	difficulty ( difficulty )
+	difficulty ( difficulty ),
+	network(NULL)
 	{
 
 	}
@@ -36,7 +37,18 @@ CStateGame::CStateGame( std::string map, int difficulty, vector<int> params ):
 	will_go_to_menu ( false ),
 	map ( map ),
 	difficulty ( difficulty ),
-	params(params)
+	params(params),
+	network(NULL)
+	{
+
+	}
+CStateGame::CStateGame( std::string map, int difficulty, Network* network ):
+	game ( NULL ),
+	will_exit ( false),
+	will_go_to_menu ( false ),
+	map ( map ),
+	difficulty ( difficulty ),
+	network(network)
 	{
 
 	}
@@ -48,13 +60,15 @@ void CStateGame::load ()
 	{
 		try 
 			{
-				if (params.size() == 0)
+				//if (params.size() == 0)
+				if (!network)
 				{
 					game = new CGame ( map, difficulty );
 					game -> start (); // level to chose
 				} else
 				{
-					game = new CGame ( map, difficulty, params );
+					//game = new CGame ( map, difficulty, params );
+					game = new CGame ( map, difficulty, network );
 					game -> start (); // level to chose
 				}
 				

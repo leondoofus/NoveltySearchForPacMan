@@ -27,7 +27,8 @@ CGame::CGame ():
 	ghost ( NULL ),
 	pause_menu ( NULL ),
 	bool_exit ( false ),
-	bool_menu ( false)
+	bool_menu ( false),
+	last_action (-1)
 	{
 		//load_high_score ();
 	}
@@ -47,7 +48,9 @@ CGame::CGame ( std::string map, int difficulty ):
 	stage ( 1 ),
 	high_score ( 0 ),
 	points ( 0 ),
-	cursor (0)
+	cursor (0),
+	network (NULL),
+	last_action (-1)
 	{
 		//load_high_score ();
 	}
@@ -68,7 +71,31 @@ CGame::CGame ( std::string map, int difficulty, vector<int> params ):
 	high_score ( 0 ),
 	points ( 0 ),
 	params (params),
-	cursor (0)
+	cursor (0),
+	network (NULL),
+	last_action (-1)
+	{
+		//load_high_score ();
+	}
+CGame::CGame ( std::string map, int difficulty, Network* network ):
+	game_over ( true ),
+	paused (false),
+	show_pause_menu (false),
+	player (NULL),
+	board (NULL),
+	layout (NULL), 
+	ghost ( NULL ),
+	pause_menu ( NULL ),
+	bool_exit ( false ),
+	bool_menu ( false),
+	map ( map),
+	difficulty ( difficulty ),
+	stage ( 1 ),
+	high_score ( 0 ),
+	points ( 0 ),
+	cursor (0),
+	network(network),
+	last_action (-1)
 	{
 		//load_high_score ();
 	}
@@ -196,7 +223,8 @@ void CGame::handle_input ()
 	{
 
 		//TODO link to neat here
-		if (cursor == 0 && params.size() == 0)
+		//if (cursor == 0 && params.size() == 0)
+		if (!network)
 		{
 			int r = rand() % 5;
 			if (r == 0) return;
@@ -206,18 +234,35 @@ void CGame::handle_input ()
 			else this -> player -> move ( CPlayer::DOWN );
 		} else
 		{
-			if (cursor > params.size()){
-				return;
-			}
-			else
+			// if (cursor > params.size()){
+			// 	return;
+			// }
+			// else
+			// {
+			// 	if (params[cursor] == 1) this -> player -> move ( CPlayer::RIGHT );
+			// 	else if (params[cursor] == 2) this -> player -> move ( CPlayer::LEFT );
+			// 	else if (params[cursor] == 3) this -> player -> move ( CPlayer::UP );
+			// 	else if (params[cursor] == 4 )this -> player -> move ( CPlayer::DOWN );
+			// 	++cursor;
+			// 	return;
+			// }
+			/*int MAX_INPUTS = 5;
+			double inputs[MAX_INPUTS];
+			if (last_action == -1)
 			{
-				if (params[cursor] == 1) this -> player -> move ( CPlayer::RIGHT );
-				else if (params[cursor] == 2) this -> player -> move ( CPlayer::LEFT );
-				else if (params[cursor] == 3) this -> player -> move ( CPlayer::UP );
-				else if (params[cursor] == 4 )this -> player -> move ( CPlayer::DOWN );
-				++cursor;
-				return;
-			}	
+				double inputs[MAX_INPUTS];
+				for (int i = 0; i < MAX_INPUTS; i++) {
+			        inputs[i] = 0;//rand()/(double)RAND_MAX;//test
+			    }
+			}
+			network->load_sensors(inputs);
+			network->activate();*/
+			int r = rand() % 5;
+			if (r == 0) return;
+			else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
+			else if (r == 2) this -> player -> move ( CPlayer::LEFT );
+			else if (r == 3) this -> player -> move ( CPlayer::UP );
+			else this -> player -> move ( CPlayer::DOWN );	
 		}
 
 		/*if ( ! CInputManager::any_key_pressed () )
@@ -416,3 +461,71 @@ void CGame::save_high_score ()
 		score << high_score;
 		score . close();
 	}
+
+int CGame::get_sensor_left()
+{
+	int x = player -> getX();
+	int y = player -> getY();
+	int val = 0;
+	int i = x;
+	while (i > 0)
+	{
+		if (!board -> is_wall(i,y) && !board -> is_border(i,y))
+		{
+			val++;
+			i--;
+		}
+		else return val;
+	}
+}
+
+int CGame::get_sensor_right()
+{
+	int x = player -> getX();
+	int y = player -> getY();
+	int val = 0;
+	int i = x;
+	while (i < board -> get_width())
+	{
+		if (!board -> is_wall(i,y) && !board -> is_border(i,y))
+		{
+			val++;
+			i++;
+		}
+		else return val;
+	}
+}
+
+int CGame::get_sensor_up()
+{
+	int x = player -> getX();
+	int y = player -> getY();
+	int val = 0;
+	int i = y;
+	while (i > 0)
+	{
+		if (!board -> is_wall(x,i) && !board -> is_border(x,i))
+		{
+			val++;
+			i--;
+		}
+		else return val;
+	}
+}
+
+int CGame::get_sensor_down()
+{
+	int x = player -> getX();
+	int y = player -> getY();
+	int val = 0;
+	int i = y;
+	while (i > board -> get_height())
+	{
+		if (!board -> is_wall(x,i) && !board -> is_border(x,i))
+		{
+			val++;
+			i++;
+		}
+		else return val;
+	}
+}
