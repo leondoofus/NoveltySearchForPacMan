@@ -367,7 +367,8 @@ void CGame::update ()
 				timer_player . unpause ();
 			}
 		if ( ghost -> are_frightened () )
-			delta_ghost = 1.6 * delta;
+			//delta_ghost = 1.6 * delta;
+			delta_ghost = 1 + delta;
 		else delta_ghost = delta;
 
 		if ( timer_ghost . d_ms () >= delta_ghost )
