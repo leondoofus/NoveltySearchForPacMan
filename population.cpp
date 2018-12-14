@@ -200,7 +200,7 @@ Population::Population(const char *filename, bool mmap) {
 	else {
         input = new std::ifstream(filename);
         if (!*input) {
-            printf("Can't open population file for input");
+            printf("Can't open population file for input !\n");
 #ifndef _WIN32
             releaseFile();
 #endif

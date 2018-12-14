@@ -5,7 +5,12 @@
 #include <CGame.h>
 
 #include <vector>
+
+#include <../../../neat.h>
+#include <../../../network.h>
+
 using namespace std;
+using namespace NEAT;
 
 class CStateGame : public CState
 	{
@@ -13,6 +18,7 @@ class CStateGame : public CState
 		CStateGame();
 		CStateGame( std::string map, int difficulty );
 		CStateGame( std::string map, int difficulty, vector<int> params );
+		CStateGame( std::string map, int difficulty, Network* network );
 		virtual ~CStateGame();
 		virtual void load ();
 		void unload ();
@@ -27,6 +33,7 @@ class CStateGame : public CState
 		std::string map;
 		unsigned int difficulty;
 		vector<int> params;
+		Network* network;
 		
 	};
 

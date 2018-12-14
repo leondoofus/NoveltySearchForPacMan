@@ -32,6 +32,8 @@ CGame::CGame() :
         ghost(NULL),
         pause_menu(NULL),
         bool_exit(false),
+        network (NULL),
+        last_action (-1),
         bool_menu(false) {
     //load_high_score ();
 }
@@ -52,6 +54,8 @@ CGame::CGame(std::string map, int difficulty) :
         stage(1),
         high_score(0),
         points(0),
+        network (NULL),
+        last_action (-1),
         cursor(0) {
     //load_high_score ();
 }
@@ -73,7 +77,32 @@ CGame::CGame(std::string map, int difficulty, vector<int> params) :
         high_score(0),
         points(0),
         params(params),
+        network (NULL),
+        last_action (-1),
         cursor(0) {
+    //load_high_score ();
+}
+
+CGame::CGame ( std::string map, int difficulty, Network* network ):
+        game_over ( true ),
+        paused (false),
+        show_pause_menu (false),
+        player (NULL),
+        board (NULL),
+        layout (NULL),
+        ghost ( NULL ),
+        pause_menu ( NULL ),
+        bool_exit ( false ),
+        bool_menu ( false),
+        map ( map),
+        difficulty ( difficulty ),
+        stage ( 1 ),
+        high_score ( 0 ),
+        points ( 0 ),
+        cursor (0),
+        network(network),
+        last_action (-1)
+{
     //load_high_score ();
 }
 
@@ -212,7 +241,8 @@ bool CGame::will_go_to_menu() const {
 void CGame::handle_input() {
     //TODO link to neat here
 
-    if (cursor == 0 && params.size() == 0) {
+    //if (cursor == 0 && params.size() == 0){
+    if (!network){
         int r = rand() % 5;
         if (r == 0) return;
         else if (r == 1) this->player->move(CPlayer::RIGHT);
@@ -220,16 +250,16 @@ void CGame::handle_input() {
         else if (r == 3) this->player->move(CPlayer::UP);
         else this->player->move(CPlayer::DOWN);
     } else {
-        if (cursor > params.size()) {
-            return;
-        } else {
-            if (params[cursor] == 1) this->player->move(CPlayer::RIGHT);
-            else if (params[cursor] == 2) this->player->move(CPlayer::LEFT);
-            else if (params[cursor] == 3) this->player->move(CPlayer::UP);
-            else if (params[cursor] == 4)this->player->move(CPlayer::DOWN);
-            ++cursor;
-            return;
-        }
+//        if (cursor > params.size()) {
+//            return;
+//        } else {
+//            if (params[cursor] == 1) this->player->move(CPlayer::RIGHT);
+//            else if (params[cursor] == 2) this->player->move(CPlayer::LEFT);
+//            else if (params[cursor] == 3) this->player->move(CPlayer::UP);
+//            else if (params[cursor] == 4)this->player->move(CPlayer::DOWN);
+//            ++cursor;
+//            return;
+//        }
     }
 
     /*if ( ! CInputManager::any_key_pressed () )
@@ -254,6 +284,15 @@ void CGame::handle_input() {
     if ( CInputManager::is_pressed (	KEY_UP  ))
         this -> player -> move ( CPlayer::UP );*/
 
+//    network->load_sensors(inputs);
+//    network->activate();
+
+    int r = rand() % 5;
+    if (r == 0) return;
+    else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
+    else if (r == 2) this -> player -> move ( CPlayer::LEFT );
+    else if (r == 3) this -> player -> move ( CPlayer::UP );
+    else this -> player -> move ( CPlayer::DOWN );
 
 
 }
@@ -415,4 +454,69 @@ void CGame::save_high_score() {
     score.open("./examples/scores/" + map + ".pacscore", std::ofstream::out | std::ofstream::trunc);
     score << high_score;
     score.close();
+}
+
+int CGame::get_sensor_left()
+{
+    int x = player -> getX();
+    int y = player -> getY();
+    int val = 0;
+    int i = x;
+    while (i > 0)
+    {
+        if (!board -> is_wall(i,y) && !board -> is_border(i,y))
+        {
+            val++;
+            i--;
+        }
+        else return val;
+    }
+}
+int CGame::get_sensor_right()
+{
+    int x = player -> getX();
+    int y = player -> getY();
+    int val = 0;
+    int i = x;
+    while (i < board -> get_width())
+    {
+        if (!board -> is_wall(i,y) && !board -> is_border(i,y))
+        {
+            val++;
+            i++;
+        }
+        else return val;
+    }
+}
+int CGame::get_sensor_up()
+{
+    int x = player -> getX();
+    int y = player -> getY();
+    int val = 0;
+    int i = y;
+    while (i > 0)
+    {
+        if (!board -> is_wall(x,i) && !board -> is_border(x,i))
+        {
+            val++;
+            i--;
+        }
+        else return val;
+    }
+}
+int CGame::get_sensor_down()
+{
+    int x = player -> getX();
+    int y = player -> getY();
+    int val = 0;
+    int i = y;
+    while (i > board -> get_height())
+    {
+        if (!board -> is_wall(x,i) && !board -> is_border(x,i))
+        {
+            val++;
+            i++;
+        }
+        else return val;
+    }
 }

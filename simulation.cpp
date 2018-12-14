@@ -42,8 +42,8 @@ static int num_species_target;
 static int compat_adjust_frequency;
 data_record *newrec;
 
-static int generation;
-static int indiv;
+static int generation = 0;
+static int indiv = 1;
 
 static double reentrant_nodes[NB_REENTRANT];
 static std::vector<float> build_order;
@@ -101,6 +101,7 @@ void novelty_loop() {
 
 //novelty metric to evaluate individual
 float novelty_metric(noveltyitem *x, noveltyitem *y) {
+    return 0;   //TODO
     float diff = 0.0;
     //for (int k = 0; k < (int)x->data.size() && k < (int)y->data.size(); k++)
     //{
@@ -447,7 +448,7 @@ void first_gen_eval_one() {
         first_gen_end();
     }
     //reload and save pop
-    pop->print_to_file(current_popfile, true);
+    pop->print_to_file(current_popfile, false);
     //archive.Serialize(archive_file.c_str());
 }
 
@@ -459,7 +460,7 @@ void eval_one() {
     return;
 #endif
 
-    if (isFirstGen) {
+    if (isFirstGen || indiv == 0) {
         first_gen_eval_one();
         if (offspring_count % (NEAT::pop_size * 1) != 0)
             return;

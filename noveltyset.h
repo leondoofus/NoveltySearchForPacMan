@@ -221,7 +221,7 @@ public:
 	}
 
 	//constructor from file
-	noveltyarchive(float threshold, float(*nm)(noveltyitem*, noveltyitem*), string filename, bool mmap = false)
+	noveltyarchive(float threshold, float(*nm)(noveltyitem*, noveltyitem*), string &filename, bool mmap = false)
 	{
 		Genome *gen;
 		generation = 0;
@@ -289,7 +289,7 @@ public:
         else {
             input = new std::ifstream(filename);
             if (!*input) {
-                printf("Can't open population file for input");
+                printf("Can't open archive file for input !\n");
 #ifndef _WIN32
                 releaseArchive();
 #endif

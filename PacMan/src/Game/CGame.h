@@ -10,7 +10,11 @@
 #include <CMenu.h>
 
 #include <vector>
+#include <neat.h>
+#include <network.h>
+
 using namespace std;
+using namespace NEAT;
 
 class CGameLayout;
 
@@ -22,6 +26,7 @@ class CGame
 		CGame ();
 		CGame ( std::string map, int difficulty );
 		CGame ( std::string map, int difficulty , vector<int> params);
+		CGame ( std::string map, int difficulty , Network* network);
 		virtual ~CGame();
 
 		/// Starts a game, loading `map` from parameter.
@@ -113,6 +118,13 @@ class CGame
 		int stage;
 
 		unsigned int cursor;
+		Network* network;
+		int last_action;
+
+		int get_sensor_left();
+		int get_sensor_right();
+		int get_sensor_up();
+		int get_sensor_down();
 	};
 
 
