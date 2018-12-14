@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
-
-
+#include <iostream>
+using namespace std;
 template<typename T> void safe_delete(T*& a) 
 	{
 	  delete a;
@@ -196,7 +196,6 @@ void CGame::handle_input ()
 	{
 
 		//TODO link to neat here
-
 		if (cursor == 0 && params.size() == 0)
 		{
 			int r = rand() % 5;
@@ -313,11 +312,11 @@ void CGame::update ()
 
 				return;
 			}
-#ifdef USE_NCURSES
+//#ifdef USE_NCURSES
 		if ( timer_player . d_ms () >= delta ){
-#else
-    if (true){
-#endif
+//#else
+//    if (true){
+//#endif
 				if ( ! player -> is_alive ())
 					{
 						if ( lives > 0 )
@@ -385,7 +384,8 @@ void CGame::draw ()
 	}
 int  CGame::get_delay ( int speed ) const
 	{
-		switch ( speed )
+		return 0;
+		/*switch ( speed )
 			{
 				case 1:
 					return 120;
@@ -399,7 +399,7 @@ int  CGame::get_delay ( int speed ) const
 					return 60;
 				default:
 					return 50;
-			}
+			}*/
 	}
 void CGame::load_high_score ()
 	{
