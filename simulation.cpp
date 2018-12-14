@@ -12,7 +12,9 @@
 
 // uncomment this to prevent learning and only play with one of the best versions so far
 //#define BEST_MODE
-#define USE_NCURSES 1
+
+//indicates whether we should use graphical mode
+//#define USE_NCURSES
 
 #define VERBOSE
 #define MAX_INPUTS 8
@@ -164,6 +166,13 @@ noveltyitem *eval_novelty(Organism *org, data_record *record) {
     return new_item;
 }
 
+//write current indiv number to file
+void write_indiv_number() {
+    ofstream ofs(indiv_file, ios::out);
+    ofs << "generation " << generation << std::endl << "indiv " << (indiv + 1) << std::endl;
+    ofs.close();
+}
+
 //get indiv to test and current generation
 void read_indiv_number() {
     char curword[128];  //max word size of 128 characters
@@ -188,13 +197,12 @@ void read_indiv_number() {
     }
     ifs.close();
 
-    ofstream ofs(indiv_file, ios::out);
     if (indiv > 1 && indiv % NEAT::pop_size == 1) {
         generation = generation + 1;
         //indiv = 0;
     }
-    ofs << "generation " << generation << std::endl << "indiv " << (indiv + 1) << std::endl;
-    ofs.close();
+
+    write_indiv_number();
 
     std::cout << "Indiv # : " << indiv << ", generation " << generation << std::endl;
 }
@@ -275,11 +283,11 @@ Population *init_novelty_realtime() {
         if (!pop) {
             read_indiv_number();
             cout << indiv << " : read pop (init)" << std::endl;
-            pop = new Population(popmap.c_str(), true);
-            if (!pop || pop->organisms.size() == 0) {
-                cout << "No mmap found for pop ! Loading from file." << endl;
+//            pop = new Population(popmap.c_str(), true);
+//            if (!pop || pop->organisms.size() == 0) {
+//                cout << "No mmap found for pop ! Loading from file." << endl;
                 pop = new Population(current_popfile.c_str(), false);
-            }
+//            }
         }
     }
 
@@ -351,6 +359,11 @@ Population *init_novelty_realtime() {
     }
 
     for (double &reentrant_node : reentrant_nodes) reentrant_node = 0;
+
+    cout << indiv << " : load archive (init)" << std::endl;
+    //archive = noveltyarchive(archive_thresh, *novelty_metric, archivemap, true);
+    //if (archive.get_set_size() == 0)
+    archive = noveltyarchive(archive_thresh, *novelty_metric, archive_file, false);
 
     cout << indiv << " : init done" << std::endl;
     return pop;
@@ -429,12 +442,6 @@ void first_gen_eval_one() {
     curorg->noveltypoint->indiv_number = indiv_counter;
     curorg->noveltypoint->genotype = curorg->gnome;
 
-    // save curorg noveltypoint for later use
-    //reload and save pop
-    //... or archive
-    /*archive = noveltyarchive(archive_thresh, *novelty_metric, archive_file);
-    archive.add_novel_item(curorg->noveltypoint);*/
-
     //end first gen at pop_size
     if (offspring_count % NEAT::pop_size == 0) {
         first_gen_end();
@@ -458,37 +465,21 @@ void eval_one() {
             return;
     }
 
-    cout << indiv << " : load archive (eval)" << std::endl;
-    archive = noveltyarchive(archive_thresh, *novelty_metric, archivemap, true);
-    if (archive.get_set_size() == 0) archive = noveltyarchive(archive_thresh, *novelty_metric, archive_file, false);
+//    cout << indiv << " : reload population (eval)" << std::endl;
+//    //reload pop
+//    if (!pop->reload(popmap.c_str(), true, true))
+//        pop->reload(current_popfile.c_str(), true, false);
 
-//    for (vector<Organism*>::iterator org = (pop->organisms).begin(); org != pop->organisms.end(); ++org) {
-//        if((*org)->noveltypoint && !(*org)->noveltypoint->added && (*org)->noveltypoint->genotype == (*org)->gnome){
-//            cout << "ERROR (6)" << std::endl;
+//    cout << indiv << " : remove not evaluated indiv (eval)" << std::endl;
+//    //remove indiv if it was not evaluated
+//    vector<Organism *>::iterator org = (pop->organisms).begin();
+//    while (org != pop->organisms.end()) {
+//        if (!(*org)->noveltypoint && (!curorg || curorg->gnome->genome_id != (*org)->gnome->genome_id)) {
+//            org = pop->organisms.erase(org);
+//        } else {
+//            ++org;
 //        }
 //    }
-
-    cout << indiv << " : reload population (eval)" << std::endl;
-    //reload pop
-    if (!pop->reload(popmap.c_str(), true, true))
-        pop->reload(current_popfile.c_str(), true, false);
-
-//    for (vector<Organism*>::iterator org = (pop->organisms).begin(); org != pop->organisms.end(); ++org) {
-//        if((*org)->noveltypoint && !(*org)->noveltypoint->added && (*org)->noveltypoint->genotype == (*org)->gnome){
-//            cout << "ERROR (6.5)" << std::endl;
-//        }
-//    }
-
-    cout << indiv << " : remove not evaluated indiv (eval)" << std::endl;
-    //remove indiv if it was not evaluated
-    vector<Organism *>::iterator org = (pop->organisms).begin();
-    while (org != pop->organisms.end()) {
-        if (!(*org)->noveltypoint && (!curorg || curorg->gnome->genome_id != (*org)->gnome->genome_id)) {
-            org = pop->organisms.erase(org);
-        } else {
-            ++org;
-        }
-    }
 
     //Now we evaluate the new individual
     //Note that in a true real-time simulation, evaluation would be happening to all individuals at all times.
@@ -527,7 +518,7 @@ void eval_one() {
         cout << "Maze solved by indiv# " << newrec->indiv_number << endl;
     }
 
-    if(IASUGameWrapper::isVictorious) {
+    if(isVictorious) {
         cout << indiv << " : Victory !!" << std::endl;
         curorg->winner = true;
         curorg->print_to_file(const_cast<char *>("write/victory"));
@@ -541,17 +532,16 @@ void eval_one() {
 
     //end of generation
     if (offspring_count % (NEAT::pop_size * 1) == 0) {
-        std::cout << "-------------END OF GENERATION----------" << endl;
 
         archive.end_of_gen_steady(pop);
         //archive.add_randomly(pop);
         archive.evaluate_population(pop, false);
 
+        std::cout << "-------------END OF GENERATION----------" << endl;
         std::cout << "ARCHIVE SIZE:" << archive.get_set_size() << endl;
 
         //Save best individuals in species for best mode
         archive.serialize_fittest(best_file.c_str());
-//		save_best_species(best_file);
     }
 
     //write out current generation and fittest individuals
@@ -564,6 +554,16 @@ void eval_one() {
 
         sprintf(fname, "%srtgen_%d", output_dir, offspring_count / NEAT::print_every);
         pop->print_to_file_by_species(fname);
+
+        cout << indiv << " : print population to file (eval)" << std::endl;
+        //print pop file and remove worst org
+        //use memory map if possible, and save every x iterations
+        if (!pop->print_to_mmap(popmap, false, true) || indiv % 15 == 0)
+            pop->print_to_file(current_popfile, false, true);
+
+        cout << indiv << " : print archive to file (eval)" << std::endl;
+        if (!archive.Serialize(archivemap.c_str(), true))
+            archive.Serialize(archive_file.c_str());
     }
 
 
@@ -616,33 +616,24 @@ void eval_one() {
 //        }
 //    }
 
-    if (!curorg->noveltypoint->data.empty() &&
-        !curorg->noveltypoint->data[0].empty() /*&& curorg->noveltypoint->data[0][0]*/) {
+//    if (!curorg->noveltypoint->data.empty() &&
+//        !curorg->noveltypoint->data[0].empty() /*&& curorg->noveltypoint->data[0][0]*/) {
+//
+//        std::cout << "Finished ! Indiv fitness : " << curorg->noveltypoint->fitness <<
+//                  " novelty (" << curorg->noveltypoint->novelty << ") : "; //<<  << std::endl;
+//
+//        for (auto item = curorg->noveltypoint->data[0].begin(); item != curorg->noveltypoint->data[0].end(); ++item) {
+//            std::cout << *item << " ";
+//        }
+//        std::cout << std::endl << "Build order : ";
+//        for (auto item = curorg->noveltypoint->data[1].begin(); item != curorg->noveltypoint->data[1].end(); ++item) {
+//            std::cout << *item << " ";
+//        }
+//        std::cout << std::endl;
+//    } else {
+//        std::cout << "ERROR : No data !" << std::endl;
+//    }
 
-        std::cout << "Finished ! Indiv fitness : " << curorg->noveltypoint->fitness <<
-                  " novelty (" << curorg->noveltypoint->novelty << ") : "; //<<  << std::endl;
-
-        for (auto item = curorg->noveltypoint->data[0].begin(); item != curorg->noveltypoint->data[0].end(); ++item) {
-            std::cout << *item << " ";
-        }
-        std::cout << std::endl << "Build order : ";
-        for (auto item = curorg->noveltypoint->data[1].begin(); item != curorg->noveltypoint->data[1].end(); ++item) {
-            std::cout << *item << " ";
-        }
-        std::cout << std::endl;
-    } else {
-        std::cout << "ERROR : No data !" << std::endl;
-    }
-
-    cout << indiv << " : print population to file (eval)" << std::endl;
-    //print pop file and remove worst org
-    //use memory map if possible, and save every x iterations
-    if (!pop->print_to_mmap(popmap, false, true) || indiv % 15 == 0)
-        pop->print_to_file(current_popfile, false, true);
-
-    cout << indiv << " : print archive to file (eval)" << std::endl;
-    if (!archive.Serialize(archivemap.c_str(), true))
-        archive.Serialize(archive_file.c_str());
 }
 
 /*
