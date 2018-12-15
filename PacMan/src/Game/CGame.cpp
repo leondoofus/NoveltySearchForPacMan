@@ -464,7 +464,7 @@ int CGame::get_sensor_left()
     int i = x;
     while (i > 0)
     {
-        if (!board -> is_wall(i,y) && !board -> is_border(i,y))
+        if (!board -> is_wall(i,y) && !board -> is_border(i,y) && !ghost->is_ghost(i,y))
         {
             val++;
             i--;
@@ -480,7 +480,7 @@ int CGame::get_sensor_right()
     int i = x;
     while (i < board -> get_width())
     {
-        if (!board -> is_wall(i,y) && !board -> is_border(i,y))
+        if (!board -> is_wall(i,y) && !board -> is_border(i,y) && !ghost->is_ghost(i,y))
         {
             val++;
             i++;
@@ -496,7 +496,7 @@ int CGame::get_sensor_up()
     int i = y;
     while (i > 0)
     {
-        if (!board -> is_wall(x,i) && !board -> is_border(x,i))
+        if (!board -> is_wall(x,i) && !board -> is_border(x,i) && !ghost->is_ghost(x,i))
         {
             val++;
             i--;
@@ -512,7 +512,7 @@ int CGame::get_sensor_down()
     int i = y;
     while (i > board -> get_height())
     {
-        if (!board -> is_wall(x,i) && !board -> is_border(x,i))
+        if (!board -> is_wall(x,i) && !board -> is_border(x,i) && !ghost->is_ghost(x,i))
         {
             val++;
             i++;

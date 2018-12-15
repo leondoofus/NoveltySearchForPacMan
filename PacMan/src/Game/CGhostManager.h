@@ -38,6 +38,8 @@ class CGhostManager
 		/// counter for it.
 		void set_frightened_mode ( bool );
 
+		bool is_ghost (int x, int y);
+
 	private:
 
 		/// Vector structure of all ghosts in the game

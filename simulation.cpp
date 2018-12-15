@@ -90,6 +90,7 @@ void novelty_loop() {
         CNCurses::exit();
 #endif
         score = e.getScore();
+        cout << "Score : " << score << endl;
     }
 
 
