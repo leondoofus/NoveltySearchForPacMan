@@ -14,7 +14,7 @@
 //#define BEST_MODE
 
 //indicates whether we should use graphical mode
-//#define USE_NCURSES
+#define USE_NCURSES 1
 
 #define VERBOSE
 #define MAX_INPUTS 8
@@ -74,21 +74,17 @@ void novelty_loop() {
     //run game
 
     int score = 0;
-#ifdef USE_NCURSES
-    CNCurses::init();
-#endif
+	if (USE_NCURSES)
+	    CNCurses::init();
     CStateManager states;
     try {
         states.run(new CStateGame("default", CGameDifficulty::MEDIUM));
-#ifdef USE_NCURSES
+	if (USE_NCURSES)
         CNCurses::exit();
-#endif
-
     }
     catch (CStateManagerQuitExeptionReturnScore &e) {
-#ifdef USE_NCURSES
+	if (USE_NCURSES)
         CNCurses::exit();
-#endif
         score = e.getScore();
         cout << "Score : " << score << endl;
     }
