@@ -31,7 +31,7 @@ static void lockFile()
 #ifdef BEST_MODE
 	const char* file = "poplockbest";
 #else
-    const char* file = "poplock36";
+    const char* file = "poplock37";
 #endif
 	sem_id=sem_open(file,0);
 	sem_id=sem_open(file, O_CREAT, 0600, 1);

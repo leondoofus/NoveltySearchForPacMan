@@ -3,6 +3,7 @@
 #define G_WRAPPER_H
 
 //#define NULL 0
+//#define USE_NCURSES 1
 
 #include <ctime>
 

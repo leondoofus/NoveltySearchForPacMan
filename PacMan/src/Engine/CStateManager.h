@@ -1,6 +1,8 @@
 #ifndef CSTATEMANAGER_H_DEFINED
 #define CSTATEMANAGER_H_DEFINED
 
+//#define USE_NCURSES 1
+
 #include <CState.h>
 
 /// Controls states all over the game.

@@ -14,7 +14,7 @@
 //#define BEST_MODE
 
 //indicates whether we should use graphical mode
-#define USE_NCURSES 1
+//#define USE_NCURSES 1
 
 #define MAX_INDIV 202
 
@@ -45,6 +45,7 @@ data_record *newrec;
 
 static int generation = 0;
 static int indiv = 1;
+static int score = 0;
 
 //static double reentrant_nodes[NB_REENTRANT];
 static std::vector<float> build_order;
@@ -71,10 +72,10 @@ void run_main_novelty(const char *outputdir) {
 void novelty_loop() {
     CStateManager states;
 
-    for (int i = 0; i < MAX_INDIV; ++i) {
+    for (int i = indiv; i < MAX_INDIV; ++i) {
         //run game
 
-        int score = 0;
+        score = 0;
 #ifdef USE_NCURSES
         CNCurses::init();
 #endif
@@ -96,8 +97,17 @@ void novelty_loop() {
         eval_one();
 
         //generate next indiv
+        if(!isFirstGen) {
+            curorg = (pop->choose_parent_species())->reproduce_one(indiv, pop, pop->species);
+        }else{
+            if(indiv >= NEAT::pop_size){
+                isFirstGen = false;
+                curorg = (pop->choose_parent_species())->reproduce_one(indiv, pop, pop->species);
+            }
+            else curorg = pop->organisms[indiv];
+        }
         indiv++;
-        curorg = (pop->choose_parent_species())->reproduce_one(offspring_count, pop, pop->species);
+        offspring_count = indiv;
     }
 }
 
@@ -141,12 +151,12 @@ noveltyitem *eval_novelty(Organism *org, data_record *record) {
     vector<float> *scores = new vector<float>();
     gather.push_back(*scores);
     gather.push_back(build_order);
-    gather[0].push_back(42);//...
+    gather[0].push_back(score);//TODO
 
     double fitness;
     static float highest_fitness = 0.0;
 
-    fitness = 0; //TODO
+    fitness = score;
 
     if (fitness > highest_fitness)
         highest_fitness = (float) fitness;
@@ -414,8 +424,8 @@ void first_gen_end() {
         if (!(*org)->noveltypoint) {
             org = pop->organisms.erase(org);
         } else {
-            (*org)->noveltypoint->genotype = (*org)->gnome;
-            (*org)->noveltypoint->phenotype = (*org)->net;
+            (*org)->noveltypoint->genotype = new Genome(*((*org)->gnome));
+            (*org)->noveltypoint->phenotype = new Network(*((*org)->net));
             ++org;
         }
     }
@@ -464,7 +474,7 @@ void eval_one() {
 
     if (isFirstGen || indiv == 0) {
         first_gen_eval_one();
-        if (offspring_count % (NEAT::pop_size * 1) != 0)
+        if (offspring_count % (NEAT::pop_size * 1) != 0 || indiv == 0)
             return;
     }
 
@@ -545,6 +555,7 @@ void eval_one() {
 
         //Save best individuals in species for best mode
         archive.serialize_fittest(best_file.c_str());
+        generation++;
     }
 
     //write out current generation and fittest individuals
@@ -614,6 +625,8 @@ void eval_one() {
         cout << "Pop size: " << pop->organisms.size() << endl;
 #endif
     }
+
+    while(pop->organisms.size() > NEAT::pop_size) pop->remove_worst();
 
 //    for (vector<Organism*>::iterator org = (pop->organisms).begin(); org != pop->organisms.end(); ++org) {
 //        if((*org)->noveltypoint && !(*org)->noveltypoint->added && (*org)->noveltypoint->genotype == (*org)->gnome){

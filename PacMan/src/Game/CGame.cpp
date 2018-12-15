@@ -19,7 +19,7 @@
 #define NB_REENTRANT 0
 
 //#define VERBOSE
-//#define USE_NCURSES
+
 
 static int counter_ghost = 0;
 
@@ -157,7 +157,7 @@ void CGame::start() {
                               board->get_ghost_y(),
                               difficulty, points);
 
-// #ifdef USE_NCURSES
+#ifdef USE_NCURSES
     int cur_h, cur_w;
     getmaxyx ( stdscr, cur_h, cur_w );
 
@@ -190,7 +190,7 @@ void CGame::start() {
 
     item = new CMenuItem ( "Exit Game", EXIT_GAME);
     pause_menu -> add ( item );
-// #endif
+#endif
 
     timer_player.start();
     timer_ghost.start();
@@ -264,10 +264,13 @@ void CGame::handle_input() {
 
         double inputs[MAX_INPUTS];
         inputs[0] = 1.0;
-        inputs[1] = (double) get_sensor_left();
-        inputs[2] = (double) get_sensor_right();
-        inputs[3] = (double) get_sensor_up();
-        inputs[4] = (double) get_sensor_down();
+        inputs[1] = (double) get_sensor_left() / 10.0;
+        inputs[2] = (double) get_sensor_right() / 10.0;
+        inputs[3] = (double) get_sensor_up() / 10.0;
+        inputs[4] = (double) get_sensor_down() / 10.0;
+        for (int i = 1; i < 5; i++) {
+            if(inputs[i] > 1.0) inputs[i] = 1.0;
+        }
         network->load_sensors(inputs);
         network->activate();
         auto outputs = network->outputs;
@@ -444,12 +447,11 @@ void CGame::update() {
                 pause_menu -> RemoveByID ( RESUME );*/
             }
         } else {
+            points--;
             player->update(board);
             ghost->check_collisions(player);
             is_food_eaten();
             is_star_eaten();
-
-
         }
 
         timer_player.start();
