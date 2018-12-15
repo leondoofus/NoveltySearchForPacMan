@@ -14,7 +14,7 @@
 //#define BEST_MODE
 
 //indicates whether we should use graphical mode
-//#define USE_NCURSES
+#define USE_NCURSES 1
 
 #define MAX_INDIV 202
 
@@ -92,7 +92,6 @@ void novelty_loop() {
             score = e.getScore();
             cout << "Score : " << score << endl;
         }
-
 
         eval_one();
 

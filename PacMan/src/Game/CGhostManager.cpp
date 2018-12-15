@@ -36,8 +36,8 @@ CGhostManager::CGhostManager ( int x, int y, int difficulty, int & points ):
 				ghost = new CGHostMedium ( x, y );
 				ghosts . push_back (  ghost );
 				
-				loose_ghost_timer = 3;
-				//loose_ghost_timer = 30;
+				//loose_ghost_timer = 3;
+				loose_ghost_timer = 30;
 			}
 		if ( difficulty == MEDIUM )
 			{
@@ -54,8 +54,8 @@ CGhostManager::CGhostManager ( int x, int y, int difficulty, int & points ):
 				ghosts . push_back (  ghost );
 
 
-				loose_ghost_timer = 2;
-				//loose_ghost_timer = 22;
+				//loose_ghost_timer = 2;
+				loose_ghost_timer = 22;
 			}
 		if ( difficulty == HARD )
 			{
@@ -71,8 +71,8 @@ CGhostManager::CGhostManager ( int x, int y, int difficulty, int & points ):
 				ghost = new CGhostHard ( x, y );
 				ghosts . push_back (  ghost );
 
-				loose_ghost_timer = 1;
-				//loose_ghost_timer = 15;
+				//loose_ghost_timer = 1;
+				loose_ghost_timer = 15;
 			}
 
 

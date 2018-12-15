@@ -157,7 +157,7 @@ void CGame::start() {
                               board->get_ghost_y(),
                               difficulty, points);
 
-#ifdef USE_NCURSES
+// #ifdef USE_NCURSES
     int cur_h, cur_w;
     getmaxyx ( stdscr, cur_h, cur_w );
 
@@ -190,20 +190,13 @@ void CGame::start() {
 
     item = new CMenuItem ( "Exit Game", EXIT_GAME);
     pause_menu -> add ( item );
-#endif
+// #endif
 
     timer_player.start();
     timer_ghost.start();
     timer.start();
 
     counter_ghost = 0;
-
-#ifndef USE_NCURSES
-    while (!game_over) {
-        CGame::update();
-        CGame::handle_input();
-    }
-#endif
 }
 
 void CGame::restart() {
@@ -416,11 +409,12 @@ void CGame::update() {
 
         return;
     }
-// #ifdef USE_NCURSES
+
+ #ifdef USE_NCURSES
     if (timer_player.d_ms() >= delta) {
-// #else
-//     if (true) {
-// #endif
+ #else
+     if (true) {
+ #endif
         if (!player->is_alive()) {
             if (lives > 0) {
                 lives--;
@@ -463,8 +457,8 @@ void CGame::update() {
         timer_player.unpause();
     }
     if (ghost->are_frightened())
-        delta_ghost = 1 + delta;
-        // delta_ghost = 1.6 * delta;
+        //delta_ghost = 1 + delta;
+         delta_ghost = 1.6 * delta;
     else delta_ghost = delta;
 
 #ifdef USE_NCURSES
@@ -478,7 +472,17 @@ void CGame::update() {
         timer_ghost.start();
     } else timer_ghost.unpause();
 
-    counter_ghost++;
+    if ( ghost -> are_frightened () )
+            delta_ghost = 1.6 * delta;
+        else delta_ghost = delta;
+
+        if ( timer_ghost . d_ms () >= delta_ghost )
+            {
+                ghost ->  update ( board, player );
+                ghost -> check_collisions ( player );
+                timer_ghost . start ();
+            }
+        else timer_ghost . unpause ();
 }
 
 void CGame::draw() {
@@ -486,21 +490,20 @@ void CGame::draw() {
 }
 
 int CGame::get_delay(int speed) const {
-    return 1;
-    // switch (speed) {
-    //     case 1:
-    //         return 120;
-    //     case 2:
-    //         return 100;
-    //     case 3:
-    //         return 90;
-    //     case 4:
-    //         return 80;
-    //     case 5:
-    //         return 60;
-    //     default:
-    //         return 50;
-    // }
+     switch (speed) {
+         case 1:
+             return 120;
+         case 2:
+             return 100;
+         case 3:
+             return 90;
+         case 4:
+             return 80;
+         case 5:
+             return 60;
+         default:
+             return 50;
+     }
 }
 
 void CGame::load_high_score() {
