@@ -16,11 +16,12 @@
 //indicates whether we should use graphical mode
 //#define USE_NCURSES
 
-#define VERBOSE
-#define MAX_INPUTS 8
-#define MAX_OUTPUTS 2
+#define MAX_INDIV 202
 
-#define NB_REENTRANT 2
+//#define MAX_INPUTS 8
+//#define MAX_OUTPUTS 2
+
+//#define NB_REENTRANT 2
 
 static char output_dir[100] = "write/";
 string genefile = "read/startgenes";
@@ -45,7 +46,7 @@ data_record *newrec;
 static int generation = 0;
 static int indiv = 1;
 
-static double reentrant_nodes[NB_REENTRANT];
+//static double reentrant_nodes[NB_REENTRANT];
 static std::vector<float> build_order;
 
 static float archive_thresh = 6.0; //initial novelty threshold
@@ -63,41 +64,42 @@ void run_main_novelty(const char *outputdir) {
 
     novelty_loop();
 
+    final_print();
 }
 
 //main novelty training loop
 void novelty_loop() {
-    //TODO loop
-
-
-
-    //run game
-
-    int score = 0;
-#ifdef USE_NCURSES
-    CNCurses::init();
-#endif
     CStateManager states;
-    try {
-        states.run(new CStateGame("default", CGameDifficulty::MEDIUM));
+
+    for (int i = 0; i < MAX_INDIV; ++i) {
+        //run game
+
+        int score = 0;
 #ifdef USE_NCURSES
-        CNCurses::exit();
+        CNCurses::init();
+#endif
+        try {
+            states.run(new CStateGame("default", CGameDifficulty::MEDIUM, curorg->net));
+#ifdef USE_NCURSES
+            CNCurses::exit();
 #endif
 
-    }
-    catch (CStateManagerQuitExeptionReturnScore &e) {
+        }
+        catch (CStateManagerQuitExeptionReturnScore &e) {
 #ifdef USE_NCURSES
-        CNCurses::exit();
+            CNCurses::exit();
 #endif
-        score = e.getScore();
-        cout << "Score : " << score << endl;
+            score = e.getScore();
+            cout << "Score : " << score << endl;
+        }
+
+
+        eval_one();
+
+        //generate next indiv
+        indiv++;
+        curorg = (pop->choose_parent_species())->reproduce_one(offspring_count, pop, pop->species);
     }
-
-
-    eval_one();
-
-    //TODO generate next indiv
-
 }
 
 //novelty metric to evaluate individual
@@ -360,7 +362,7 @@ Population *init_novelty_realtime() {
         exit(1);
     }
 
-    for (double &reentrant_node : reentrant_nodes) reentrant_node = 0;
+    //    for (double &reentrant_node : reentrant_nodes) reentrant_node = 0;
 
     cout << indiv << " : load archive (init)" << std::endl;
     //archive = noveltyarchive(archive_thresh, *novelty_metric, archivemap, true);
@@ -384,7 +386,7 @@ void final_print() {
     //Real-time evolution variables
 
     //write out run information, archive, and final generation
-    cout << "COMPLETED...";
+    cout << "COMPLETED..." << endl;
     //char filename[100];
     //sprintf(filename, "%srecord.dat", output_dir);
     //Record.serialize(filename);
@@ -566,6 +568,8 @@ void eval_one() {
         cout << indiv << " : print archive to file (eval)" << std::endl;
         if (!archive.Serialize(archivemap.c_str(), true))
             archive.Serialize(archive_file.c_str());
+
+        write_indiv_number();
     }
 
 
@@ -653,52 +657,52 @@ BWAPI::Position expandCoord(double c) {
 }
 */
 
-
-//create neural net inputs from sensors
-void generate_neural_inputs(double *inputs) {
-    int i;
-    //bias
-    inputs[0] = (1.0);
-    for (i = 1; i < MAX_INPUTS; i++) {
-        inputs[i] = 0;//rand()/(double)RAND_MAX;//test
-    }
-    i = 1;
-
-    /*
-    // reentrant nodes
-    for (int r = 0; r < 50; r++) {
-        inputs[i + r] = reentrant_nodes[r];
-    }
-    i += 50;
-    */
-}
-
-//transform neural net outputs into broodwar actions
-void interpret_outputs(vector<NNode *> outputs) {
-    /*
-    for (int i = 150; i < 200; i++) {
-        reentrant_nodes[i - 150] = outputs[i]->get_active_out();
-    }
-    */
-    /*
-    if (isnan(outputs.at(0)->get_active_out()) || isnan(outputs.at(1)->get_active_out()))
-        std::cout << "OUTPUT ISNAN" << endl;
-    */
-}
-
-
-//perform a step and apply output to the game
-void network_step() {
-#ifndef BEST_MODE
-
-#endif
-
-    Network *net = curorg->net;
-    double inputs[MAX_INPUTS];
-
-
-    generate_neural_inputs(inputs);
-    net->load_sensors(inputs);
-    net->activate();
-    interpret_outputs(net->outputs);
-}
+//
+////create neural net inputs from sensors
+//void generate_neural_inputs(double *inputs) {
+//    int i;
+//    //bias
+//    inputs[0] = (1.0);
+//    for (i = 1; i < MAX_INPUTS; i++) {
+//        inputs[i] = 0;//rand()/(double)RAND_MAX;//test
+//    }
+//    i = 1;
+//
+//    /*
+//    // reentrant nodes
+//    for (int r = 0; r < 50; r++) {
+//        inputs[i + r] = reentrant_nodes[r];
+//    }
+//    i += 50;
+//    */
+//}
+//
+////transform neural net outputs into broodwar actions
+//void interpret_outputs(vector<NNode *> outputs) {
+//    /*
+//    for (int i = 150; i < 200; i++) {
+//        reentrant_nodes[i - 150] = outputs[i]->get_active_out();
+//    }
+//    */
+//    /*
+//    if (isnan(outputs.at(0)->get_active_out()) || isnan(outputs.at(1)->get_active_out()))
+//        std::cout << "OUTPUT ISNAN" << endl;
+//    */
+//}
+//
+//
+////perform a step and apply output to the game
+//void network_step() {
+//#ifndef BEST_MODE
+//
+//#endif
+//
+//    Network *net = curorg->net;
+//    double inputs[MAX_INPUTS];
+//
+//
+//    generate_neural_inputs(inputs);
+//    net->load_sensors(inputs);
+//    net->activate();
+//    interpret_outputs(net->outputs);
+//}

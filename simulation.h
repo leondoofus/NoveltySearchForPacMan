@@ -22,6 +22,7 @@ float novelty_metric(noveltyitem* x, noveltyitem* y);
 noveltyitem* eval_novelty(Organism *org, data_record* record = NULL);
 void eval_one();
 void network_step();
+void final_print();
 
 /*
 

@@ -16,7 +16,7 @@ static sem_t * arch_id;
 
 static void lockArchive()
 {
-    const char* file = "archivelock42";
+    const char* file = "archivelock43";
     arch_id=sem_open(file, O_CREAT, 0600, 1);
 
     if(arch_id == SEM_FAILED) {
