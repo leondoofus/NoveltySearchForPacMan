@@ -74,16 +74,16 @@ void novelty_loop() {
     //run game
 
     int score = 0;
-	if (USE_NCURSES)
-	    CNCurses::init();
+	//if (USE_NCURSES)
+	CNCurses::init();
     CStateManager states;
     try {
         states.run(new CStateGame("default", CGameDifficulty::MEDIUM));
-	if (USE_NCURSES)
-        CNCurses::exit();
+	//if (USE_NCURSES)
+    //    CNCurses::exit();
     }
     catch (CStateManagerQuitExeptionReturnScore &e) {
-	if (USE_NCURSES)
+	//if (USE_NCURSES)
         CNCurses::exit();
         score = e.getScore();
         cout << "Score : " << score << endl;

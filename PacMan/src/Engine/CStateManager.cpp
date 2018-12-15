@@ -44,9 +44,9 @@ void CStateManager::run ( CState * init_state )
 					{
 						//CInputManager::update ();
 						current_state -> update ();
-//#ifdef USE_NCURSES
+#ifdef USE_NCURSES
 						if ( current_state) current_state -> draw ();
-//#endif
+#endif
 						CTime::delay_ms (0);
 					}
 				catch ( CStateManagerChangeExeption & e )
