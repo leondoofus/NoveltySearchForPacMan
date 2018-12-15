@@ -244,11 +244,30 @@ void CGame::handle_input() {
     //if (cursor == 0 && params.size() == 0){
     if (!network){
         int r = rand() % 5;
-        if (r == 0) return;
-        else if (r == 1) this->player->move(CPlayer::RIGHT);
-        else if (r == 2) this->player->move(CPlayer::LEFT);
-        else if (r == 3) this->player->move(CPlayer::UP);
-        else this->player->move(CPlayer::DOWN);
+	    if (r == 0)
+	    {
+	    	last_action = 0;
+	    }
+	    else if (r == 1)
+	    {
+	    	last_action = 1;
+	    	this -> player -> move ( CPlayer::LEFT );
+	    } 
+	    else if (r == 2)
+	    {
+	    	last_action = 2;
+	    	this -> player -> move ( CPlayer::RIGHT );
+	    } 
+	    else if (r == 3)
+	    {
+	    	last_action = 3;
+	    	this -> player -> move ( CPlayer::UP );
+	    } 
+	    else
+	    {
+	    	last_action = 4;
+	    	this -> player -> move ( CPlayer::DOWN );
+	    } 
     } else {
 //        if (cursor > params.size()) {
 //            return;
@@ -284,15 +303,48 @@ void CGame::handle_input() {
     if ( CInputManager::is_pressed (	KEY_UP  ))
         this -> player -> move ( CPlayer::UP );*/
 
-//    network->load_sensors(inputs);
-//    network->activate();
-
+    // network->flush();
+    // double inputs[5]; //?
+    // inputs[0] = 1.0;
+    // inputs[1] = (double)get_sensor_left();
+    // inputs[2] = (double)get_sensor_right();
+    // inputs[3] = (double)get_sensor_up();
+    // inputs[4] = (double)get_sensor_down();
+    // network->load_sensors(inputs);
+    // network->activate();
+    // float o1 = network->outputs[0]->activation;
+    // float o2 = network->outputs[1]->activation;
+    // if (isnan(o1) || isnan(o2))
+    // {
+    // 	last_action = 0;
+    // 	return;
+    // }
+    //output network?
     int r = rand() % 5;
-    if (r == 0) return;
-    else if (r == 1) this -> player -> move ( CPlayer::RIGHT );
-    else if (r == 2) this -> player -> move ( CPlayer::LEFT );
-    else if (r == 3) this -> player -> move ( CPlayer::UP );
-    else this -> player -> move ( CPlayer::DOWN );
+    if (r == 0)
+    {
+    	last_action = 0;
+    }
+    else if (r == 1)
+    {
+    	last_action = 1;
+    	this -> player -> move ( CPlayer::LEFT );
+    } 
+    else if (r == 2)
+    {
+    	last_action = 2;
+    	this -> player -> move ( CPlayer::RIGHT );
+    } 
+    else if (r == 3)
+    {
+    	last_action = 3;
+    	this -> player -> move ( CPlayer::UP );
+    } 
+    else
+    {
+    	last_action = 4;
+    	this -> player -> move ( CPlayer::DOWN );
+    } 
 
 
 }
@@ -357,11 +409,11 @@ void CGame::update() {
 
         return;
     }
-#ifdef USE_NCURSES
+// #ifdef USE_NCURSES
     if ( timer_player . d_ms () >= delta ){
-#else
-    if (true) {
-#endif
+// #else
+//     if (true) {
+// #endif
         if (!player->is_alive()) {
             if (lives > 0) {
                 lives--;
@@ -404,7 +456,8 @@ void CGame::update() {
         timer_player.unpause();
     }
     if (ghost->are_frightened())
-        delta_ghost = 1.6 * delta;
+        delta_ghost = 1 + delta;
+        // delta_ghost = 1.6 * delta;
     else delta_ghost = delta;
 
 #ifdef USE_NCURSES
@@ -426,20 +479,21 @@ void CGame::draw() {
 }
 
 int CGame::get_delay(int speed) const {
-    switch (speed) {
-        case 1:
-            return 120;
-        case 2:
-            return 100;
-        case 3:
-            return 90;
-        case 4:
-            return 80;
-        case 5:
-            return 60;
-        default:
-            return 50;
-    }
+    return 1;
+    // switch (speed) {
+    //     case 1:
+    //         return 120;
+    //     case 2:
+    //         return 100;
+    //     case 3:
+    //         return 90;
+    //     case 4:
+    //         return 80;
+    //     case 5:
+    //         return 60;
+    //     default:
+    //         return 50;
+    // }
 }
 
 void CGame::load_high_score() {
