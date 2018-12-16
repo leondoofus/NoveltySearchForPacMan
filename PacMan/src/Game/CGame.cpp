@@ -18,6 +18,9 @@
 
 #define NB_REENTRANT 0
 
+#define DELTA_TIME 1000
+#define DELTA_STEP 50
+
 //#define VERBOSE
 
 
@@ -42,7 +45,8 @@ CGame::CGame() :
         bool_exit(false),
         network(NULL),
         last_action(-1),
-        bool_menu(false) {
+        bool_menu(false),
+        last_time_eat(0) {
     //load_high_score ();
 }
 
@@ -64,7 +68,8 @@ CGame::CGame(std::string map, int difficulty) :
         points(0),
         network(NULL),
         last_action(-1),
-        cursor(0) {
+        cursor(0),
+        last_time_eat(0) {
     //load_high_score ();
 }
 
@@ -87,7 +92,8 @@ CGame::CGame(std::string map, int difficulty, vector<int> params) :
         params(params),
         network(NULL),
         last_action(-1),
-        cursor(0) {
+        cursor(0),
+        last_time_eat(0) {
     //load_high_score ();
 }
 
@@ -109,7 +115,8 @@ CGame::CGame(std::string map, int difficulty, Network *network) :
         points(0),
         cursor(0),
         network(network),
-        last_action(-1) {
+        last_action(-1),
+        last_time_eat(0) {
     //load_high_score ();
 }
 
@@ -356,8 +363,10 @@ bool CGame::is_food_eaten() {
     if (board->is_dot(player->getX(), player->getY())) {
         board->eat_dot(player->getX(), player->getY());
         points += 10;
+        last_time_eat = 0;
         return true;
     }
+    last_time_eat ++;
     return false;
 }
 
@@ -366,12 +375,17 @@ bool CGame::is_star_eaten() {
         board->eat_dot(player->getX(), player->getY());
         points += 50;
         ghost->set_frightened_mode(true);
+        last_time_eat = 0;
         return true;
     }
+    last_time_eat ++;
     return false;
 }
 
 void CGame::update() {
+    // Stop 
+    if (timer.d_ms() >= DELTA_TIME || last_time_eat >= DELTA_STEP) CStateManager::quitScore(points);
+
     timer_player.pause();
     timer_ghost.pause();
 
@@ -381,7 +395,7 @@ void CGame::update() {
     if (points > high_score)
         high_score = points;
 
-    if (board->all_dots_eaten()) {
+    if (board->all_dots_eaten()) { //Dont't know if we should keep this
         std::vector<std::string> v = {"Your score is " + points};
         CDialog::show(v, "LEVEL PASSED");
         stage++;
@@ -447,7 +461,7 @@ void CGame::update() {
                 pause_menu -> RemoveByID ( RESUME );*/
             }
         } else {
-            points--;
+            points--; //Huh?
             player->update(board);
             ghost->check_collisions(player);
             is_food_eaten();
@@ -572,4 +586,122 @@ int CGame::get_sensor_down() {
             i++;
         } else return val;
     }
+}
+
+int CGame::get_ghost_left()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = x;
+    while (i > 0)
+    {
+        if (board->is_wall(i, y) || board->is_border(i, y)) return -1;
+        else if (!ghost->is_ghost(i,y)) val++;
+        else return val+1;
+        i--;
+    }
+    return -1;
+}
+int CGame::get_ghost_right()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = x;
+    while (i < board->get_width())
+    {
+        if (board->is_wall(i, y) || board->is_border(i, y)) return -1;
+        else if (!ghost->is_ghost(i,y)) val++;
+        else return val+1;
+        i++;
+    }
+    return -1;
+}
+int CGame::get_ghost_up()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = y;
+    while (i > 0)
+    {
+        if (board->is_wall(x, i) || board->is_border(x, i)) return -1;
+        else if (!ghost->is_ghost(x,i)) val++;
+        else return val+1;
+        i--;
+    }
+    return -1;
+}
+int CGame::get_ghost_down()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = y;
+    while (i < board->get_height())
+    {
+        if (board->is_wall(x, i) || board->is_border(x, i)) return -1;
+        else if (!ghost->is_ghost(x,i)) val++;
+        else return val+1;
+        i++;
+    }
+    return -1;
+}
+
+int CGame::get_dots_left()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = x;
+    while (i > 0)
+    {
+        if (board->is_wall(i, y) || board->is_border(i, y) || ghost->is_ghost(i,y)) return val;
+        else if (!board->is_empty_spot(i,y)) val++;
+        i--;
+    }
+    return val;
+}
+int CGame::get_dots_right()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = x;
+    while (i < board->get_width())
+    {
+        if (board->is_wall(i, y) || board->is_border(i, y) || ghost->is_ghost(i,y)) return val;
+        else if (!board->is_empty_spot(i,y)) val++;
+        i++;
+    }
+    return val;
+}
+int CGame::get_dots_up()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = y;
+    while (i > 0)
+    {
+        if (board->is_wall(x, i) || board->is_border(x, i) || ghost->is_ghost(x,i)) return val;
+        else if (!board->is_empty_spot(x,i)) val++;
+        i--;
+    }
+    return val;
+}
+int CGame::get_dots_down()
+{
+    int x = player->getX();
+    int y = player->getY();
+    int val = 0;
+    int i = y;
+    while (i < board->get_height())
+    {
+        if (board->is_wall(x, i) || board->is_border(x, i) || ghost->is_ghost(x,i)) return val;
+        else if (!board->is_empty_spot(x,i)) val++;
+        i++;
+    }
+    return val;
 }

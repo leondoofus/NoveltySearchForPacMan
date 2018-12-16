@@ -121,10 +121,25 @@ class CGame
 		Network* network;
 		int last_action;
 
+		int last_time_eat;
+
+		// Get the longest distance possible
 		int get_sensor_left();
 		int get_sensor_right();
 		int get_sensor_up();
 		int get_sensor_down();
+
+		// Get the nearest ghost return -1 if don't find anything
+		int get_ghost_left();
+		int get_ghost_right();
+		int get_ghost_up();
+		int get_ghost_down();
+
+		// Get number of dots
+		int get_dots_left();
+		int get_dots_right();
+		int get_dots_up();
+		int get_dots_down();
 	};
 
 
