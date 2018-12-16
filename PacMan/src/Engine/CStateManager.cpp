@@ -31,6 +31,10 @@ int CStateManager::quitScore (int _score)
 	{
 		throw CStateManagerQuitExeptionReturnScore(_score);
 	}
+int CStateManager::victory (int _score)
+	{
+		throw CStateManagerVictory(_score);
+	}
 void CStateManager::run ( CState * init_state )
 	{
 		if ( ! init_state)

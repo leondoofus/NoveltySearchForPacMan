@@ -410,11 +410,12 @@ void CGame::update() {
         high_score = points;
 
     //TODO replace this with victory event
-    if (board->all_dots_eaten()) { //Dont't know if we should keep this
-        std::vector<std::string> v = {"Your score is " + points};
-        CDialog::show(v, "LEVEL PASSED");
-        stage++;
-        start();
+    if (board->all_dots_eaten()) {
+        CStateManager::victory(points + 200); // reward points
+        // std::vector<std::string> v = {"Your score is " + points};
+        // CDialog::show(v, "LEVEL PASSED");
+        // stage++;
+        // start();
     }
 
     if (is_paused()) {
