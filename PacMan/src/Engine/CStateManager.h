@@ -26,6 +26,7 @@ class CStateManager
 		static void quit ();
 
 		static int quitScore(int _score);
+		static int victory(int _score);
 
 		/// Initializes basically everything. Place
 		/// where all magic happens. Game never leaves
@@ -70,6 +71,23 @@ class CStateManagerQuitExeptionReturnScore
 	public:
 		int score;
 		CStateManagerQuitExeptionReturnScore(int _score )
+		{
+			score = _score;
+		}
+		int getScore()
+		{
+			return score;
+		}
+		
+	};
+
+/// Exeption that's used in case of victory
+///	
+class CStateManagerVictory 
+	{
+	public:
+		int score;
+		CStateManagerVictory(int _score )
 		{
 			score = _score;
 		}

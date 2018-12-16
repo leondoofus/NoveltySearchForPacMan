@@ -94,6 +94,13 @@ void novelty_loop() {
             score = e.getScore();
             //cout << "Score : " << score << endl;
         }
+        catch (CStateManagerVictory &e) {
+#ifdef USE_NCURSES
+            CNCurses::exit();
+#endif
+            score = e.getScore();
+            cout << "Score : " << score << " - WIN"<< endl;
+        }
 
         eval_one();
 
