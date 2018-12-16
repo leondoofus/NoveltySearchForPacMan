@@ -90,6 +90,7 @@ class CGame
 		int lives;
 
 		vector<int> params;
+		static vector<float> path;
 
 	protected:
 		/// Timer that tells when to move player.
@@ -140,6 +141,12 @@ class CGame
 		int get_dots_right();
 		int get_dots_up();
 		int get_dots_down();
+
+
+		int shrinkCoord(int x, int y);
+		bool isCorner(int x, int y);
+		void update_path();
+
 	};
 
 

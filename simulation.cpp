@@ -14,6 +14,7 @@
 //#define BEST_MODE
 
 //indicates whether we should use graphical mode
+//WARNING : do not set this here, see CStateManager.h
 //#define USE_NCURSES 1
 
 #define MAX_INDIV 202
@@ -113,29 +114,28 @@ void novelty_loop() {
 
 //novelty metric to evaluate individual
 float novelty_metric(noveltyitem *x, noveltyitem *y) {
-    return 0;   //TODO
     float diff = 0.0;
     //for (int k = 0; k < (int)x->data.size() && k < (int)y->data.size(); k++)
     //{
     int k = 0;
-    if (x->data[k].size() != 0) {
-        if (y->data[k].size() == 0) {
-            diff += x->data[k].size() * 50;
+    if (!x->data[k].empty()) {
+        if (y->data[k].empty()) {
+            diff += x->data[k].size() * 5;
             //continue;
         }
-        diff += hist_diff(x->data[k], y->data[k]);
+        //diff += hist_diff(x->data[k], y->data[k]);
     }
-    k = 1;
-    if (x->data[k].size() != 0) {
+    //k = 1;
+    if (!x->data[k].empty()) {
         for (int l = 0; l < (int) x->data[k].size() && l < (int) y->data[k].size(); l++) {
-            if (x->data[k][l] != y->data[k][l]) diff += 50;
+            if (x->data[k][l] != y->data[k][l]) diff += 5;
         }
         if (x->data[k].size() > y->data[k].size())
-            diff += x->data[k].size() - y->data[k].size() * 70; //reward additional units
+            diff += (x->data[k].size() - y->data[k].size()) * 5; //reward additional steps
     }
     //}
-    if (x->data.size() > y->data.size())
-        diff += 200 * (x->data.size() - y->data.size());    //reward additional vector
+//    if (x->data.size() > y->data.size())
+//        diff += 200 * (x->data.size() - y->data.size());    //reward additional vector
     return diff;
 }
 
@@ -148,10 +148,10 @@ noveltyitem *eval_novelty(Organism *org, data_record *record) {
     //vector to caracterize novelty
     vector<vector<float> > gather;
 
-    vector<float> *scores = new vector<float>();
-    gather.push_back(*scores);
-    gather.push_back(build_order);
-    gather[0].push_back(score);//TODO
+    //vector<float> *scores = new vector<float>();
+    //gather.push_back(*scores);
+    gather.push_back(CGame::path);
+    //gather[0].push_back(score);//TODO
 
     double fitness;
     static float highest_fitness = 0.0;

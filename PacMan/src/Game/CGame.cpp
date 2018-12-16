@@ -12,19 +12,26 @@
 #include <iostream>
 
 #include <simulation.h>
+#include "CGame.h"
 
-#define MAX_INPUTS 5
+
+#define MAX_INPUTS 13
 #define MAX_OUTPUTS 1
 
 #define NB_REENTRANT 0
 
-#define DELTA_TIME 1000
-#define DELTA_STEP 50
+#ifdef USE_NCURSES
+#define DELTA_TIME 300000
+#else
+#define DELTA_TIME 3000
+#endif
+#define DELTA_STEP 100
 
 //#define VERBOSE
 
 
 static int counter_ghost = 0;
+vector<float> CGame::path {-1};
 
 template<typename T>
 void safe_delete(T *&a) {
@@ -71,7 +78,7 @@ CGame::CGame(std::string map, int difficulty) :
         cursor(0),
         last_time_eat(0) {
     //load_high_score ();
-}
+    }
 
 CGame::CGame(std::string map, int difficulty, vector<int> params) :
         game_over(true),
@@ -204,6 +211,7 @@ void CGame::start() {
     timer.start();
 
     counter_ghost = 0;
+    CGame::path = {-1};
 }
 
 void CGame::restart() {
@@ -226,6 +234,7 @@ void CGame::restart() {
     timer.start();
 
     counter_ghost = 0;
+    CGame::path = {-1};
 
 }
 
@@ -275,9 +284,23 @@ void CGame::handle_input() {
         inputs[2] = (double) get_sensor_right() / 10.0;
         inputs[3] = (double) get_sensor_up() / 10.0;
         inputs[4] = (double) get_sensor_down() / 10.0;
-        for (int i = 1; i < 5; i++) {
+
+        inputs[5] = 1.0/(double) get_ghost_left();
+        inputs[6] = 1.0/(double) get_ghost_right();
+        inputs[7] = 1.0/(double) get_ghost_up();
+        inputs[8] = 1.0/(double) get_ghost_down();
+
+        inputs[9]  = (double) get_dots_left() / 10.0;
+        inputs[10] = (double) get_dots_right() / 10.0;
+        inputs[11] = (double) get_dots_up() / 10.0;
+        inputs[12] = (double) get_dots_down() / 10.0;
+
+        for (int i = 1; i < MAX_INPUTS; i++) {
             if(inputs[i] > 1.0) inputs[i] = 1.0;
+            if(inputs[i] < 0.0) inputs[i] = 0.0;
         }
+
+
         network->load_sensors(inputs);
         network->activate();
         auto outputs = network->outputs;
@@ -287,15 +310,6 @@ void CGame::handle_input() {
             reentrant_nodes[i] = outputs[i]->get_active_out();
         }
 */
-        // network->flush();
-
-        // float o1 = network->outputs[0]->activation;
-        // float o2 = network->outputs[1]->activation;
-        // if (isnan(o1) || isnan(o2))
-        // {
-        // 	last_action = 0;
-        // 	return;
-        // }
 
         //output
         r = (int) (outputs[0]->get_active_out() * 5);
@@ -378,7 +392,7 @@ bool CGame::is_star_eaten() {
         last_time_eat = 0;
         return true;
     }
-    last_time_eat ++;
+    //last_time_eat ++; //already in function above
     return false;
 }
 
@@ -395,6 +409,7 @@ void CGame::update() {
     if (points > high_score)
         high_score = points;
 
+    //TODO replace this with victory event
     if (board->all_dots_eaten()) { //Dont't know if we should keep this
         std::vector<std::string> v = {"Your score is " + points};
         CDialog::show(v, "LEVEL PASSED");
@@ -461,11 +476,12 @@ void CGame::update() {
                 pause_menu -> RemoveByID ( RESUME );*/
             }
         } else {
-            points--; //Huh?
+            points--; //remove points for fitness calculation -> the faster, the better
             player->update(board);
             ghost->check_collisions(player);
             is_food_eaten();
             is_star_eaten();
+            update_path();
         }
 
         timer_player.start();
@@ -518,7 +534,7 @@ int CGame::get_delay(int speed) const {
          case 5:
              return 60;
          default:
-             return 50;
+             return 30;
      }
 }
 
@@ -547,6 +563,7 @@ int CGame::get_sensor_left() {
             i--;
         } else return val;
     }
+    return val;
 }
 
 int CGame::get_sensor_right() {
@@ -560,6 +577,7 @@ int CGame::get_sensor_right() {
             i++;
         } else return val;
     }
+    return val;
 }
 
 int CGame::get_sensor_up() {
@@ -573,6 +591,7 @@ int CGame::get_sensor_up() {
             i--;
         } else return val;
     }
+    return val;
 }
 
 int CGame::get_sensor_down() {
@@ -586,6 +605,7 @@ int CGame::get_sensor_down() {
             i++;
         } else return val;
     }
+    return val;
 }
 
 int CGame::get_ghost_left()
@@ -704,4 +724,24 @@ int CGame::get_dots_down()
         i++;
     }
     return val;
+}
+
+//transform map coordinates into a single value
+int CGame::shrinkCoord(int x, int y) {
+    return (x * board->get_width() + y) ;
+}
+
+bool CGame::isCorner(int x, int y) {
+    return !(board->is_wall(x, y - 1) || board->is_border(x, y - 1) || board->is_wall(x, y + 1) || board->is_border(x, y + 1)) &&
+           !(board->is_wall(x-1, y) || board->is_border(x-1, y) || board->is_wall(x+1, y) || board->is_border(x+1, y));
+}
+
+//add current position to path if it is not already at the end
+void CGame::update_path() {
+    int x = player->getX();
+    int y = player->getY();
+    int c = shrinkCoord(x, y);
+    if(isCorner(x, y) && *(CGame::path.end() - 1) != c){
+        CGame::path.push_back(c);
+    }
 }
