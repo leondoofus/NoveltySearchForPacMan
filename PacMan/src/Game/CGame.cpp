@@ -732,8 +732,10 @@ int CGame::shrinkCoord(int x, int y) {
 }
 
 bool CGame::isCorner(int x, int y) {
-    return !(board->is_wall(x, y - 1) || board->is_border(x, y - 1) || board->is_wall(x, y + 1) || board->is_border(x, y + 1)) &&
-           !(board->is_wall(x-1, y) || board->is_border(x-1, y) || board->is_wall(x+1, y) || board->is_border(x+1, y));
+    return ((!board->is_wall(x, y - 1) && !board->is_border(x, y - 1))
+            || (!board->is_wall(x, y + 1) && !board->is_border(x, y + 1))) &&
+           ((!board->is_wall(x-1, y) && !board->is_border(x-1, y))
+           || (!board->is_wall(x+1, y) && !board->is_border(x+1, y)));
 }
 
 //add current position to path if it is not already at the end

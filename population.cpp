@@ -1244,8 +1244,8 @@ Organism* Population::remove_worst() {
 		//		printf("Org to kill: species = %d",org_to_kill->species->id);
 
 				//Remove the organism from its species and the population
-		std::cout << "removing indiv #" << org_to_kill->gnome->genome_id << " (removeWorst) novelty : " <<
-		org_to_kill->noveltypoint->novelty << " fitness : " << org_to_kill->noveltypoint->fitness << std::endl;
+		//std::cout << "removing indiv #" << org_to_kill->gnome->genome_id << " (removeWorst) novelty : " <<
+		//org_to_kill->noveltypoint->novelty << " fitness : " << org_to_kill->noveltypoint->fitness << std::endl;
 		orgs_species->remove_org(org_to_kill);  //Remove from species
 		delete org_to_kill;  //Delete the organism itself
 		organisms.erase(deadorg); //Remove from population list

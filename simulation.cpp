@@ -17,7 +17,7 @@
 //WARNING : do not set this here, see CStateManager.h
 //#define USE_NCURSES 1
 
-#define MAX_INDIV 202
+#define MAX_INDIV 200000
 
 //#define MAX_INPUTS 8
 //#define MAX_OUTPUTS 2
@@ -92,7 +92,7 @@ void novelty_loop() {
             CNCurses::exit();
 #endif
             score = e.getScore();
-            cout << "Score : " << score << endl;
+            //cout << "Score : " << score << endl;
         }
 
         eval_one();
@@ -113,7 +113,7 @@ void novelty_loop() {
 }
 
 //novelty metric to evaluate individual
-float novelty_metric(noveltyitem *x, noveltyitem *y) {
+float novelty_metric(noveltyitem *y, noveltyitem *x) {
     float diff = 0.0;
     //for (int k = 0; k < (int)x->data.size() && k < (int)y->data.size(); k++)
     //{
