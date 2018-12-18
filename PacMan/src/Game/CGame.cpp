@@ -14,8 +14,9 @@
 #include <simulation.h>
 #include "CGame.h"
 
-
-#define MAX_INPUTS 13
+//use to allow compatibility with older version
+//#define COMPAT
+#define MAX_INPUTS 15
 #define MAX_OUTPUTS 1
 
 #define NB_REENTRANT 0
@@ -277,23 +278,30 @@ void CGame::handle_input() {
             this->player->move(CPlayer::DOWN);
         }
     } else {
+        double width = board->get_width(), height = board->get_height();
 
         double inputs[MAX_INPUTS];
         inputs[0] = 1.0;
-        inputs[1] = (double) get_sensor_left() / 10.0;
-        inputs[2] = (double) get_sensor_right() / 10.0;
-        inputs[3] = (double) get_sensor_up() / 10.0;
-        inputs[4] = (double) get_sensor_down() / 10.0;
+        inputs[1] = (double) get_sensor_left() / width;
+        inputs[2] = (double) get_sensor_right() / width;
+        inputs[3] = (double) get_sensor_up() / height;
+        inputs[4] = (double) get_sensor_down() / height;
 
         inputs[5] = 1.0/(double) get_ghost_left();
         inputs[6] = 1.0/(double) get_ghost_right();
         inputs[7] = 1.0/(double) get_ghost_up();
         inputs[8] = 1.0/(double) get_ghost_down();
 
-        inputs[9]  = (double) get_dots_left() / 10.0;
-        inputs[10] = (double) get_dots_right() / 10.0;
-        inputs[11] = (double) get_dots_up() / 10.0;
-        inputs[12] = (double) get_dots_down() / 10.0;
+        inputs[9]  = (double) get_dots_left() / width;
+        inputs[10] = (double) get_dots_right() / width;
+        inputs[11] = (double) get_dots_up() / height;
+        inputs[12] = (double) get_dots_down() / height;
+
+#ifndef COMPAT
+
+        inputs[13] = (double) player->getX() / height;
+        inputs[14] = (double) player->getY() / width;
+#endif
 
         for (int i = 1; i < MAX_INPUTS; i++) {
             if(inputs[i] > 1.0) inputs[i] = 1.0;
@@ -409,9 +417,9 @@ void CGame::update() {
     if (points > high_score)
         high_score = points;
 
-    //TODO replace this with victory event
+    // victory event
     if (board->all_dots_eaten()) {
-        CStateManager::victory(points + 200); // reward points
+        CStateManager::victory(points + 2000); // reward points
         // std::vector<std::string> v = {"Your score is " + points};
         // CDialog::show(v, "LEVEL PASSED");
         // stage++;
@@ -445,6 +453,7 @@ void CGame::update() {
 
  #ifdef USE_NCURSES
     if (timer_player.d_ms() >= delta) {
+//    if(true){
  #else
      if (true) {
  #endif
@@ -489,33 +498,25 @@ void CGame::update() {
     } else {
         timer_player.unpause();
     }
+
+#ifdef USE_NCURSES
     if (ghost->are_frightened())
         //delta_ghost = 1 + delta;
          delta_ghost = 1.6 * delta;
     else delta_ghost = delta;
 
-#ifdef USE_NCURSES
     if ( timer_ghost . d_ms () >= delta_ghost )
+//        if (!(counter_ghost % 3) || !ghost->are_frightened())
 #else
     if (!(counter_ghost % 3) || !ghost->are_frightened())  //slow down ghosts in training mode
 #endif
     {
+        ghost->check_collisions(player);
         ghost->update(board, player);
         ghost->check_collisions(player);
         timer_ghost.start();
     } else timer_ghost.unpause();
-
-    if ( ghost -> are_frightened () )
-            delta_ghost = 1.6 * delta;
-        else delta_ghost = delta;
-
-        if ( timer_ghost . d_ms () >= delta_ghost )
-            {
-                ghost ->  update ( board, player );
-                ghost -> check_collisions ( player );
-                timer_ghost . start ();
-            }
-        else timer_ghost . unpause ();
+    counter_ghost++;
 }
 
 void CGame::draw() {
@@ -535,7 +536,7 @@ int CGame::get_delay(int speed) const {
          case 5:
              return 60;
          default:
-             return 30;
+             return 50;
      }
 }
 
@@ -729,7 +730,7 @@ int CGame::get_dots_down()
 
 //transform map coordinates into a single value
 int CGame::shrinkCoord(int x, int y) {
-    return (x * board->get_width() + y) ;
+    return (x + (board->get_width() * y)) ;
 }
 
 bool CGame::isCorner(int x, int y) {
@@ -744,7 +745,15 @@ void CGame::update_path() {
     int x = player->getX();
     int y = player->getY();
     int c = shrinkCoord(x, y);
-    if(isCorner(x, y) && *(CGame::path.end() - 1) != c){
+    //bool found = false;
+    if(isCorner(x, y)) {
+        for (auto cell : CGame::path) {
+            if(cell == c) return;
+        }
         CGame::path.push_back(c);
     }
+
+//    if(isCorner(x, y) && *(CGame::path.end() - 1) != c){
+//        CGame::path.push_back(c);
+//    }
 }

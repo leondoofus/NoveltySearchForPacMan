@@ -5,5 +5,5 @@
 
 void CTime::delay_ms(int delay)
 	{
-		usleep((useconds_t)delay * 100);
+		usleep((useconds_t)delay * 1000);
 	}

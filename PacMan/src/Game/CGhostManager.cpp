@@ -131,6 +131,8 @@ void CGhostManager::check_collisions ( CPlayer * player )
 						{
 							ghosts [i] -> set_frightened_mode ( false );
 							ghosts [i] -> move_to ( starting_x, starting_y );
+							points += 50;
+							/*
 							ghosts_eaten++;
 							switch ( ghosts_eaten )
 								{
@@ -147,7 +149,7 @@ void CGhostManager::check_collisions ( CPlayer * player )
 										points += 1600;
 										break;
 								}
-
+*/
 						}
 					else player -> kill ();
 				}

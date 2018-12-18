@@ -17,7 +17,7 @@
 //WARNING : do not set this here, see CStateManager.h
 //#define USE_NCURSES 1
 
-#define MAX_INDIV 200000
+#define MAX_INDIV 1000000
 
 //#define MAX_INPUTS 8
 //#define MAX_OUTPUTS 2
@@ -99,11 +99,15 @@ void novelty_loop() {
             CNCurses::exit();
 #endif
             score = e.getScore();
-            cout << "Score : " << score << " - WIN"<< endl;
+            cout << "Score : " << score << " - VICTORY !"<< endl;
         }
 
         eval_one();
 
+#ifdef BEST_MODE
+        if(indiv < pop->organisms.size()) curorg = pop->organisms[i];
+        else return;
+#else
         //generate next indiv
         if(!isFirstGen) {
             curorg = (pop->choose_parent_species())->reproduce_one(indiv, pop, pop->species);
@@ -114,6 +118,7 @@ void novelty_loop() {
             }
             else curorg = pop->organisms[indiv];
         }
+#endif
         indiv++;
         offspring_count = indiv;
     }
@@ -238,8 +243,9 @@ Population *init_novelty_realtime() {
 #ifdef BEST_MODE
     std::srand((unsigned)time(NULL));
     pop = new Population(best_file.c_str());
-    int rn = std::rand();
-    int r = (int)(rn % pop->organisms.size());
+    //int rn = std::rand();
+    //int r = (int)(rn % pop->organisms.size());
+    int r = 0;
     curorg = pop->organisms[r];
     std::cout << "Best mode : picked indiv #" << curorg->gnome->genome_id <<
         " (fitness " << curorg->noveltypoint->fitness << ", novelty " << curorg->noveltypoint->novelty << ")" << std::endl;
@@ -390,16 +396,8 @@ Population *init_novelty_realtime() {
 }
 
 
-//NOTE : this function is unused and needs to be refactored
+//print all the files at the end of training
 void final_print() {
-
-    //vector<Species*>::iterator curspecies;
-    //vector<Species*>::iterator curspec; //used in printing out debug info
-
-    //vector<Species*> sorted_species;  //Species sorted by max fit org in Species
-    //Record disabled (it displays information about individuals during all the tests)
-    //data_rec Record; //stores run information
-    //Real-time evolution variables
 
     //write out run information, archive, and final generation
     cout << "COMPLETED..." << endl;
@@ -415,6 +413,16 @@ void final_print() {
 
     sprintf(fname, "%srtgen_final", output_dir);
     pop->print_to_file_by_species(fname);
+
+    cout << indiv << " : print pop and archive (final)" << std::endl;
+    write_indiv_number();
+    //print pop file
+    pop->print_to_mmap(popmap, false, false);
+    pop->print_to_file(current_popfile, false, true);
+
+    archive.Serialize(archivemap.c_str(), true);
+    archive.Serialize(archive_file.c_str());
+    cout << "Done !" << endl;
 }
 
 //actions to perform at the end of first generation
@@ -557,11 +565,9 @@ void eval_one() {
         //archive.add_randomly(pop);
         archive.evaluate_population(pop, false);
 
-        std::cout << "-------------END OF GENERATION----------" << endl;
+        //std::cout << "-------------END OF GENERATION----------" << endl;
         std::cout << "ARCHIVE SIZE:" << archive.get_set_size() << endl;
 
-        //Save best individuals in species for best mode
-        archive.serialize_fittest(best_file.c_str());
         generation++;
     }
 
@@ -587,6 +593,9 @@ void eval_one() {
             archive.Serialize(archive_file.c_str());
 
         write_indiv_number();
+
+        //Save best individuals in species for best mode
+        archive.serialize_fittest(best_file.c_str());
     }
 
 

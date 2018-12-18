@@ -52,9 +52,9 @@ void CStateManager::run ( CState * init_state )
 						current_state -> update ();
 #ifdef USE_NCURSES
 						if ( current_state) current_state -> draw ();
-						CTime::delay_ms (10);
+						CTime::delay_ms (120);
 #endif
-					CTime::delay_ms (0);
+					//CTime::delay_ms (0);
 				}
 				catch ( CStateManagerChangeExeption & e )
 					{
